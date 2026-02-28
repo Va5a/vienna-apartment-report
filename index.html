@@ -503,10 +503,21 @@
     const markersByRank = new Map();
     let highlight = null;
 
+    function getCard(rank) {
+      return document.querySelector(".card[data-rank='" + rank + "']");
+    }
+
     function selectCard(rank) {
       document.querySelectorAll('.card.selected').forEach(el => el.classList.remove('selected'));
-      const el = document.querySelector(".card[data-rank='" + rank + "']");
+      const el = getCard(rank);
       if (el) el.classList.add('selected');
+    }
+
+    function scrollToCard(rank) {
+      const el = getCard(rank);
+      if (!el) return;
+      // Smooth scroll the left pane so the relevant listing is visible.
+      el.scrollIntoView({behavior: 'smooth', block: 'start'});
     }
 
     function focusListing(rank, zoom=16) {
@@ -518,6 +529,7 @@
       if (highlight) { try { map.removeLayer(highlight); } catch(e) {} }
       highlight = L.circleMarker(ll, {radius: 14, color:'#2563eb', weight: 3, fillColor:'#60a5fa', fillOpacity: 0.15}).addTo(map);
       selectCard(rank);
+      scrollToCard(rank);
     }
 
     points.forEach((p) => {
@@ -529,6 +541,7 @@
       if (p.popup) m.bindPopup(p.popup, {maxWidth: 420});
       m.on('click', () => {
         selectCard(p.rank);
+        scrollToCard(p.rank);
         if (map.getZoom() < 15) map.setView(ll, 16, {animate:true});
         if (highlight) { try { map.removeLayer(highlight); } catch(e) {} }
         highlight = L.circleMarker(ll, {radius: 14, color:'#2563eb', weight: 3, fillColor:'#60a5fa', fillOpacity: 0.15}).addTo(map);
