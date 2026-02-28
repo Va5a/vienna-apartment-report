@@ -9,7 +9,7 @@
   <style>
     body { margin:0; font-family: -apple-system, system-ui, Segoe UI, Roboto, Helvetica, Arial; }
     .wrap { display:flex; height:100vh; width:100vw; overflow:hidden; }
-    .left { width: 520px; max-width: 70vw; min-width: 320px; overflow:auto; padding: 0; box-sizing: border-box; border-right: 1px solid #eee; transition: width 160ms ease; background:#fff; }
+    .left { width: 520px; max-width: 70vw; min-width: 320px; overflow:auto; padding: 0; box-sizing: border-box; border-right: 1px solid #eee; transition: width 160ms ease, height 160ms ease; background:#fff; }
     .leftInner { padding: 14px; }
     .left.collapsed { width: 0 !important; min-width: 0 !important; border-right: none; }
     .left.collapsed .leftInner { display:none; }
@@ -19,6 +19,17 @@
     .left.collapsed + #splitter { display:none; }
 
     .right { flex:1; position: relative; }
+
+    /* Mobile / narrow screens: stack list above map */
+    @media (max-width: 900px) {
+      .wrap { flex-direction: column; }
+      .left { width: 100% !important; max-width: none; min-width: 0; height: 55vh; border-right:none; border-bottom: 1px solid #eee; }
+      .left.collapsed { width: 100% !important; height: 0 !important; border-bottom:none; }
+      #splitter { display:none; }
+      .right { height: 45vh; }
+      .floatingHandle { top: 10px; left: 10px; }
+      .floatingHandle button { border-left:1px solid #ddd; border-radius: 10px; }
+    }
     .leftHeader { position: sticky; top: 0; background: #fff; border-bottom: 1px solid #eee; padding: 10px 14px; z-index: 10; }
     .leftHeaderTop { display:flex; align-items:center; justify-content: space-between; gap: 10px; }
     .toggleBtn { border:1px solid #ddd; background:#fff; border-radius: 8px; padding: 6px 10px; font-size: 12px; cursor:pointer; }
@@ -607,14 +618,14 @@
       if (visible) {
         leftPane.classList.remove('collapsed');
         showWrap.style.display = 'none';
-        // restore width
+        // restore width (desktop) / rely on CSS height on mobile
         const w = parseInt(localStorage.getItem('leftPaneWidth') || '520', 10);
         leftPane.style.width = Math.max(320, Math.min(w, Math.floor(window.innerWidth * 0.7))) + 'px';
-        setTimeout(() => map.invalidateSize(), 60);
+        setTimeout(() => map.invalidateSize(), 80);
       } else {
         leftPane.classList.add('collapsed');
         showWrap.style.display = 'block';
-        setTimeout(() => map.invalidateSize(), 60);
+        setTimeout(() => map.invalidateSize(), 80);
       }
     }
 
