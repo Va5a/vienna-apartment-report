@@ -52,8 +52,9 @@
     .badge { display:inline-block; font-size:11px; padding:2px 8px; border-radius: 999px; border:1px solid #ddd; background:#f8fafc; }
     .badge-terrace { border-color:#0ea5e9; background: rgba(14,165,233,0.10); }
     .badge-parking { border-color:#10b981; background: rgba(16,185,129,0.10); }
+    .badge-quiet { border-color:#f97316; background: rgba(249,115,22,0.12); }
     .links { font-size:12px; margin-top:6px; }
-    .summary { font-size:13px; margin-top:8px; line-height:1.35; }
+    .summary { font-size:13px; margin-top:8px; line-height:1.35; white-space: pre-wrap; }
     .warn { margin-top:6px; font-size:12px; color:#b00020; font-weight:600; }
   </style>
 </head>
@@ -79,6 +80,9 @@
             </label>
             <label style='display:flex; align-items:center; gap:6px; cursor:pointer'>
               <input type='checkbox' id='filterTerrace'/> <span>Terrace/Outdoor</span>
+            </label>
+            <label style='display:flex; align-items:center; gap:6px; cursor:pointer'>
+              <input type='checkbox' id='filterLively' checked/> <span>Lively evenings only</span>
             </label>
             <span style='color:#666'>(filters)</span>
           </div>
@@ -107,7 +111,7 @@
         <div style='padding-top:10px'>
           <h2 style='margin:0 0 10px 0'>Ranked listings</h2>
           
-        <div class='card' id='listing-1' data-rank='1' data-has-terrace='false' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 1'>
+        <div class='card' id='listing-1' data-rank='1' data-has-terrace='false' data-has-parking='false' data-lively='true' data-evening-score='244.3' tabindex='0' role='button' aria-label='Focus map on ranked listing 1'>
           <div class='rank'>#1</div>
           <div class='title'>
             Newly renovated 2-room 54 m² in a period building Vienna District 1
@@ -140,7 +144,7 @@ Broader neighbourhood
 - Vienna District 1 is the historic core with landmark architecture, dense amenities and strong transit; it can feel busy and tourist-heavy in places. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-2' data-rank='2' data-has-terrace='false' data-has-parking='true' tabindex='0' role='button' aria-label='Focus map on ranked listing 2'>
+        <div class='card' id='listing-2' data-rank='2' data-has-terrace='false' data-has-parking='true' data-lively='true' data-evening-score='189.3' tabindex='0' role='button' aria-label='Focus map on ranked listing 2'>
           <div class='rank'>#2</div>
           <div class='title'>
             Apartment 2-room 74 m² in a period building Vienna District 1
@@ -173,7 +177,7 @@ Broader neighbourhood
 - Vienna District 1 is the historic core with landmark architecture, dense amenities and strong transit; it can feel busy and tourist-heavy in places. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-3' data-rank='3' data-has-terrace='false' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 3'>
+        <div class='card' id='listing-3' data-rank='3' data-has-terrace='false' data-has-parking='false' data-lively='true' data-evening-score='149.4' tabindex='0' role='button' aria-label='Focus map on ranked listing 3'>
           <div class='rank'>#3</div>
           <div class='title'>
             Apartment 2-room 42 m² in a period building Vienna District 7
@@ -206,7 +210,7 @@ Broader neighbourhood
 - Vienna District 7 is a popular inner area with many restaurants, bars and galleries; evenings can be lively. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-4' data-rank='4' data-has-terrace='false' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 4'>
+        <div class='card' id='listing-4' data-rank='4' data-has-terrace='false' data-has-parking='false' data-lively='true' data-evening-score='193.5' tabindex='0' role='button' aria-label='Focus map on ranked listing 4'>
           <div class='rank'>#4</div>
           <div class='title'>
             Apartment 2-room in a period building Vienna District 7
@@ -238,7 +242,7 @@ Broader neighbourhood
 - Vienna District 7 is a popular inner area with many restaurants, bars and galleries; evenings can be lively. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-5' data-rank='5' data-has-terrace='false' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 5'>
+        <div class='card' id='listing-5' data-rank='5' data-has-terrace='false' data-has-parking='false' data-lively='true' data-evening-score='95.0' tabindex='0' role='button' aria-label='Focus map on ranked listing 5'>
           <div class='rank'>#5</div>
           <div class='title'>
             Apartment 3-room 88 m² in a period building Vienna District 7
@@ -271,14 +275,14 @@ Broader neighbourhood
 - Vienna District 7 is a popular inner area with many restaurants, bars and galleries; evenings can be lively. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-6' data-rank='6' data-has-terrace='false' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 6'>
+        <div class='card' id='listing-6' data-rank='6' data-has-terrace='false' data-has-parking='false' data-lively='false' data-evening-score='36.9' tabindex='0' role='button' aria-label='Focus map on ranked listing 6'>
           <div class='rank'>#6</div>
           <div class='title'>
             Apartment 2-room 66 m² in a new-build Vienna District 4
             <div style='font-size:11px;color:#666;font-weight:400'>(DE: NEUBAU - WG-GEEIGNET - Möblierte 2-Zimmer-Wohnung)</div>
           </div>
           <div class='meta'>€439,000 · 66 m² · 2 rooms [Bezirk=district; Neubau=newer-build category]  · Wien, 04. Bezirk, Wieden</div>
-          
+          <div class='badges'><span class='badge badge-quiet'>Quiet evenings (proxy)</span></div>
           
           <div class='links'><a target='_blank' rel='noreferrer' href='https://translate.google.com/translate?sl=auto&amp;tl=en&amp;u=https%3A%2F%2Fwww.willhaben.at%2Fiad%2Fimmobilien%2Fd%2Feigentumswohnung%2Fwien%2Fwien-1040-wieden%2Fneubau-wg-geeignet-moeblierte-2-zimmer-wohnung-1200519867%2F'><b>Ad (EN)</b></a> | <a target='_blank' rel='noreferrer' href='https://www.willhaben.at/iad/immobilien/d/eigentumswohnung/wien/wien-1040-wieden/neubau-wg-geeignet-moeblierte-2-zimmer-wohnung-1200519867/'><b>Ad</b></a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/search/?api=1&amp;query=48.187683,16.36837'>Maps</a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;viewpoint=48.187683,16.36837'>Street View</a></div>
           <div class='summary'>Property
@@ -302,14 +306,14 @@ Broader neighbourhood
 - Vienna District 4 is an inner district known for cafes and local streets; generally walkable and well served by transit. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-7' data-rank='7' data-has-terrace='false' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 7'>
+        <div class='card' id='listing-7' data-rank='7' data-has-terrace='false' data-has-parking='false' data-lively='false' data-evening-score='64.8' tabindex='0' role='button' aria-label='Focus map on ranked listing 7'>
           <div class='rank'>#7</div>
           <div class='title'>
             Apartment 2-room 56 m² in a new-build Vienna District 9
             <div style='font-size:11px;color:#666;font-weight:400'>(DE: Traum vom Dachgeschoß im Herzen der Stadt)</div>
           </div>
           <div class='meta'>€479,000 · 56.35 m² · 2 rooms [Bezirk=district; Neubau=newer-build category]  · Glasergasse 17, Wien, 09. Bezirk, Alsergrund</div>
-          
+          <div class='badges'><span class='badge badge-quiet'>Quiet evenings (proxy)</span></div>
           <div class='warn'>Address/map mismatch flagged (likely approximate pin).</div>
           <div class='links'><a target='_blank' rel='noreferrer' href='https://translate.google.com/translate?sl=auto&amp;tl=en&amp;u=https%3A%2F%2Fwww.willhaben.at%2Fiad%2Fimmobilien%2Fd%2Feigentumswohnung%2Fwien%2Fwien-1090-alsergrund%2Ftraum-vom-dachgeschoss-im-herzen-der-stadt-1504163283%2F'><b>Ad (EN)</b></a> | <a target='_blank' rel='noreferrer' href='https://www.willhaben.at/iad/immobilien/d/eigentumswohnung/wien/wien-1090-alsergrund/traum-vom-dachgeschoss-im-herzen-der-stadt-1504163283/'><b>Ad</b></a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/search/?api=1&amp;query=48.22489,16.36438'>Maps</a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;viewpoint=48.22489,16.36438'>Street View</a></div>
           <div class='summary'>Property
@@ -332,14 +336,14 @@ Broader neighbourhood
 - Vienna District 9 combines residential streets with universities and offices; strong transit and many local services. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-8' data-rank='8' data-has-terrace='false' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 8'>
+        <div class='card' id='listing-8' data-rank='8' data-has-terrace='false' data-has-parking='false' data-lively='false' data-evening-score='65.3' tabindex='0' role='button' aria-label='Focus map on ranked listing 8'>
           <div class='rank'>#8</div>
           <div class='title'>
             Apartment 2-room 78 m² in a period building Vienna District 9
             <div style='font-size:11px;color:#666;font-weight:400'>(DE: ALTBAUWOHNUNG GENERALSANIERT IM SERVITENVIERTEL)</div>
           </div>
           <div class='meta'>€499,000 · 78 m² · 2 rooms [Bezirk=district; Altbau=pre-war/older building category; Lift=elevator]  · Wien, 09. Bezirk, Alsergrund</div>
-          
+          <div class='badges'><span class='badge badge-quiet'>Quiet evenings (proxy)</span></div>
           
           <div class='links'><a target='_blank' rel='noreferrer' href='https://translate.google.com/translate?sl=auto&amp;tl=en&amp;u=https%3A%2F%2Fwww.willhaben.at%2Fiad%2Fimmobilien%2Fd%2Feigentumswohnung%2Fwien%2Fwien-1090-alsergrund%2Faltbauwohnung-generalsaniert-im-servitenviertel-1590480484%2F'><b>Ad (EN)</b></a> | <a target='_blank' rel='noreferrer' href='https://www.willhaben.at/iad/immobilien/d/eigentumswohnung/wien/wien-1090-alsergrund/altbauwohnung-generalsaniert-im-servitenviertel-1590480484/'><b>Ad</b></a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/search/?api=1&amp;query=48.219917,16.359146'>Maps</a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;viewpoint=48.219917,16.359146'>Street View</a></div>
           <div class='summary'>Property
@@ -365,7 +369,7 @@ Broader neighbourhood
 - Vienna District 9 combines residential streets with universities and offices; strong transit and many local services. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-9' data-rank='9' data-has-terrace='false' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 9'>
+        <div class='card' id='listing-9' data-rank='9' data-has-terrace='false' data-has-parking='false' data-lively='true' data-evening-score='110.1' tabindex='0' role='button' aria-label='Focus map on ranked listing 9'>
           <div class='rank'>#9</div>
           <div class='title'>
             Apartment 3-room 79 m² in a period building Vienna District 9
@@ -398,7 +402,7 @@ Broader neighbourhood
 - Vienna District 9 combines residential streets with universities and offices; strong transit and many local services. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-10' data-rank='10' data-has-terrace='false' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 10'>
+        <div class='card' id='listing-10' data-rank='10' data-has-terrace='false' data-has-parking='false' data-lively='true' data-evening-score='120.7' tabindex='0' role='button' aria-label='Focus map on ranked listing 10'>
           <div class='rank'>#10</div>
           <div class='title'>
             Apartment 4-room 104 m² in a new-build Vienna District 8
@@ -431,7 +435,7 @@ Broader neighbourhood
 - Vienna District 8 is an inner residential district with a village-like feel in parts and good access to the centre. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-11' data-rank='11' data-has-terrace='false' data-has-parking='true' tabindex='0' role='button' aria-label='Focus map on ranked listing 11'>
+        <div class='card' id='listing-11' data-rank='11' data-has-terrace='false' data-has-parking='true' data-lively='true' data-evening-score='87.8' tabindex='0' role='button' aria-label='Focus map on ranked listing 11'>
           <div class='rank'>#11</div>
           <div class='title'>
             Apartment 3-room 101 m² in a period building Vienna District 8
@@ -464,14 +468,14 @@ Broader neighbourhood
 - Vienna District 8 is an inner residential district with a village-like feel in parts and good access to the centre. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-12' data-rank='12' data-has-terrace='true' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 12'>
+        <div class='card' id='listing-12' data-rank='12' data-has-terrace='true' data-has-parking='false' data-lively='false' data-evening-score='20.0' tabindex='0' role='button' aria-label='Focus map on ranked listing 12'>
           <div class='rank'>#12</div>
           <div class='title'>
             Apartment 2-room 50 m² in a new-build Vienna District 3
             <div style='font-size:11px;color:#666;font-weight:400'>(DE: PROVISIONSFREI! 31. STOCK! HELIO TOWER! ERSTBEZUG! 2. ZIMMER MIT 8m² LOGGIA! EINBAUKÜCHE! BEFRISTET VERMIETET! WIENBLICK.)</div>
           </div>
           <div class='meta'>€427,900 · 50 m² · 2 rooms [Bezirk=district; Neubau=newer-build category; Erstbezug=first occupancy]  · Döblerhofstraße 10, Wien, 03. Bezirk, Landstra&amp;szlig;e</div>
-          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span></div>
+          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span><span class='badge badge-quiet'>Quiet evenings (proxy)</span></div>
           <div class='warn'>Address/map mismatch flagged (likely approximate pin).</div>
           <div class='links'><a target='_blank' rel='noreferrer' href='https://translate.google.com/translate?sl=auto&amp;tl=en&amp;u=https%3A%2F%2Fwww.willhaben.at%2Fiad%2Fimmobilien%2Fd%2Feigentumswohnung%2Fwien%2Fwien-1030-landstrasse%2Fprovisionsfrei-31-stock-helio-tower-erstbezug-2-zimmer-mit-8m-loggia-einbaukueche-befristet-vermietet-wienblick-1444492317%2F'><b>Ad (EN)</b></a> | <a target='_blank' rel='noreferrer' href='https://www.willhaben.at/iad/immobilien/d/eigentumswohnung/wien/wien-1030-landstrasse/provisionsfrei-31-stock-helio-tower-erstbezug-2-zimmer-mit-8m-loggia-einbaukueche-befristet-vermietet-wienblick-1444492317/'><b>Ad</b></a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/search/?api=1&amp;query=48.18533,16.4143'>Maps</a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;viewpoint=48.18533,16.4143'>Street View</a></div>
           <div class='summary'>Property
@@ -497,7 +501,7 @@ Broader neighbourhood
 - Vienna District 3 is largely residential with pockets of offices and culture; typically well connected and calmer than the inner core. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-13' data-rank='13' data-has-terrace='false' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 13'>
+        <div class='card' id='listing-13' data-rank='13' data-has-terrace='false' data-has-parking='false' data-lively='true' data-evening-score='85.9' tabindex='0' role='button' aria-label='Focus map on ranked listing 13'>
           <div class='rank'>#13</div>
           <div class='title'>
             Apartment 3-room 99 m² in a period building Vienna District 3
@@ -530,14 +534,14 @@ Broader neighbourhood
 - Vienna District 3 is largely residential with pockets of offices and culture; typically well connected and calmer than the inner core. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-14' data-rank='14' data-has-terrace='false' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 14'>
+        <div class='card' id='listing-14' data-rank='14' data-has-terrace='false' data-has-parking='false' data-lively='false' data-evening-score='29.0' tabindex='0' role='button' aria-label='Focus map on ranked listing 14'>
           <div class='rank'>#14</div>
           <div class='title'>
             Apartment 2-room 54 m² Vienna District 2
             <div style='font-size:11px;color:#666;font-weight:400'>(DE: Offenes, helles Loft im DG in erstklassiger Augarten-Nähe - A\\)</div>
           </div>
           <div class='meta'>€340,000 · 54.35 m² · 2 rooms [Bezirk=district]  · Wien, 02. Bezirk, Leopoldstadt</div>
-          
+          <div class='badges'><span class='badge badge-quiet'>Quiet evenings (proxy)</span></div>
           
           <div class='links'><a target='_blank' rel='noreferrer' href='https://translate.google.com/translate?sl=auto&amp;tl=en&amp;u=https%3A%2F%2Fwww.willhaben.at%2Fiad%2Fimmobilien%2Fd%2Feigentumswohnung%2Fwien%2Fwien-1020-leopoldstadt%2Foffenes-helles-loft-im-dg-in-erstklassiger-augarten-naehe-a-1563486226%2F'><b>Ad (EN)</b></a> | <a target='_blank' rel='noreferrer' href='https://www.willhaben.at/iad/immobilien/d/eigentumswohnung/wien/wien-1020-leopoldstadt/offenes-helles-loft-im-dg-in-erstklassiger-augarten-naehe-a-1563486226/'><b>Ad</b></a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/search/?api=1&amp;query=48.222004,16.381407'>Maps</a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;viewpoint=48.222004,16.381407'>Street View</a></div>
           <div class='summary'>Property
@@ -561,14 +565,14 @@ Broader neighbourhood
 - Vienna District 2 is a mixed residential and leisure area close to the centre, with parks and good connections; vibes vary by micro-area. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-15' data-rank='15' data-has-terrace='false' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 15'>
+        <div class='card' id='listing-15' data-rank='15' data-has-terrace='false' data-has-parking='false' data-lively='false' data-evening-score='12.0' tabindex='0' role='button' aria-label='Focus map on ranked listing 15'>
           <div class='rank'>#15</div>
           <div class='title'>
             Newly renovated 2-room 51 m² in a period building Vienna District 2
             <div style='font-size:11px;color:#666;font-weight:400'>(DE: ++NEU++ Hochwertig kernsanierter ERSTBEZUG in toller Lage mit optimalen Grundriss!)</div>
           </div>
           <div class='meta'>€399,000 · 51 m² · 2 rooms [Bezirk=district; Altbau=pre-war/older building category; Erstbezug=first occupancy; Lift=elevator]  · Wien, 02. Bezirk, Leopoldstadt</div>
-          
+          <div class='badges'><span class='badge badge-quiet'>Quiet evenings (proxy)</span></div>
           <div class='warn'>Address/map mismatch flagged (likely approximate pin).</div>
           <div class='links'><a target='_blank' rel='noreferrer' href='https://translate.google.com/translate?sl=auto&amp;tl=en&amp;u=https%3A%2F%2Fwww.willhaben.at%2Fiad%2Fimmobilien%2Fd%2Feigentumswohnung%2Fwien%2Fwien-1020-leopoldstadt%2F-neu-hochwertig-kernsanierter-erstbezug-in-toller-lage-mit-optimalen-grundriss-1308386031%2F'><b>Ad (EN)</b></a> | <a target='_blank' rel='noreferrer' href='https://www.willhaben.at/iad/immobilien/d/eigentumswohnung/wien/wien-1020-leopoldstadt/-neu-hochwertig-kernsanierter-erstbezug-in-toller-lage-mit-optimalen-grundriss-1308386031/'><b>Ad</b></a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/search/?api=1&amp;query=48.230865,16.397938'>Maps</a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;viewpoint=48.230865,16.397938'>Street View</a></div>
           <div class='summary'>Property
@@ -594,14 +598,14 @@ Broader neighbourhood
 - Vienna District 2 is a mixed residential and leisure area close to the centre, with parks and good connections; vibes vary by micro-area. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-16' data-rank='16' data-has-terrace='true' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 16'>
+        <div class='card' id='listing-16' data-rank='16' data-has-terrace='true' data-has-parking='false' data-lively='false' data-evening-score='29.4' tabindex='0' role='button' aria-label='Focus map on ranked listing 16'>
           <div class='rank'>#16</div>
           <div class='title'>
             Apartment 3-room 65 m² in a period building Vienna District 6
             <div style='font-size:11px;color:#666;font-weight:400'>(DE: Zentrale 3-Zimmer-Wohnung mit Terrasse in 1060 Wien | WG-Geeignet)</div>
           </div>
           <div class='meta'>€319,000 · 65 m² · 3 rooms [Bezirk=district; Altbau=pre-war/older building category]  · Wien, 06. Bezirk, Mariahilf</div>
-          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span></div>
+          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span><span class='badge badge-quiet'>Quiet evenings (proxy)</span></div>
           
           <div class='links'><a target='_blank' rel='noreferrer' href='https://translate.google.com/translate?sl=auto&amp;tl=en&amp;u=https%3A%2F%2Fwww.willhaben.at%2Fiad%2Fimmobilien%2Fd%2Feigentumswohnung%2Fwien%2Fwien-1060-mariahilf%2Fzentrale-3-zimmer-wohnung-mit-terrasse-in-1060-wien-wg-geeignet-1738261064%2F'><b>Ad (EN)</b></a> | <a target='_blank' rel='noreferrer' href='https://www.willhaben.at/iad/immobilien/d/eigentumswohnung/wien/wien-1060-mariahilf/zentrale-3-zimmer-wohnung-mit-terrasse-in-1060-wien-wg-geeignet-1738261064/'><b>Ad</b></a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/search/?api=1&amp;query=48.18978,16.34249'>Maps</a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;viewpoint=48.18978,16.34249'>Street View</a></div>
           <div class='summary'>Property
@@ -627,7 +631,7 @@ Broader neighbourhood
 - Vienna District 6 is central and lively, with shopping streets and excellent public transport. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-17' data-rank='17' data-has-terrace='false' data-has-parking='true' tabindex='0' role='button' aria-label='Focus map on ranked listing 17'>
+        <div class='card' id='listing-17' data-rank='17' data-has-terrace='false' data-has-parking='true' data-lively='true' data-evening-score='101.7' tabindex='0' role='button' aria-label='Focus map on ranked listing 17'>
           <div class='rank'>#17</div>
           <div class='title'>
             Apartment Vienna District 6
@@ -652,7 +656,7 @@ Broader neighbourhood
 - Vienna District 6 is central and lively, with shopping streets and excellent public transport. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-18' data-rank='18' data-has-terrace='true' data-has-parking='true' tabindex='0' role='button' aria-label='Focus map on ranked listing 18'>
+        <div class='card' id='listing-18' data-rank='18' data-has-terrace='true' data-has-parking='true' data-lively='true' data-evening-score='101.7' tabindex='0' role='button' aria-label='Focus map on ranked listing 18'>
           <div class='rank'>#18</div>
           <div class='title'>
             Apartment 2-room 60 m² in a period building Vienna District 6
@@ -685,7 +689,7 @@ Broader neighbourhood
 - Vienna District 6 is central and lively, with shopping streets and excellent public transport. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-19' data-rank='19' data-has-terrace='true' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 19'>
+        <div class='card' id='listing-19' data-rank='19' data-has-terrace='true' data-has-parking='false' data-lively='true' data-evening-score='108.2' tabindex='0' role='button' aria-label='Focus map on ranked listing 19'>
           <div class='rank'>#19</div>
           <div class='title'>
             Apartment 2-room 58 m² in a period building Vienna District 5
@@ -718,7 +722,7 @@ Broader neighbourhood
 - Vienna District 5 is an inner residential district with improving amenities and good commuting options. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-20' data-rank='20' data-has-terrace='true' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 20'>
+        <div class='card' id='listing-20' data-rank='20' data-has-terrace='true' data-has-parking='false' data-lively='true' data-evening-score='108.2' tabindex='0' role='button' aria-label='Focus map on ranked listing 20'>
           <div class='rank'>#20</div>
           <div class='title'>
             Apartment 2-room 46 m² in a period building Vienna District 5
@@ -751,7 +755,7 @@ Broader neighbourhood
 - Vienna District 5 is an inner residential district with improving amenities and good commuting options. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-21' data-rank='21' data-has-terrace='false' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 21'>
+        <div class='card' id='listing-21' data-rank='21' data-has-terrace='false' data-has-parking='false' data-lively='true' data-evening-score='90.5' tabindex='0' role='button' aria-label='Focus map on ranked listing 21'>
           <div class='rank'>#21</div>
           <div class='title'>
             Apartment 3-room 73 m² in a period building Vienna District 5
@@ -784,7 +788,7 @@ Broader neighbourhood
 - Vienna District 5 is an inner residential district with improving amenities and good commuting options. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-22' data-rank='22' data-has-terrace='false' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 22'>
+        <div class='card' id='listing-22' data-rank='22' data-has-terrace='false' data-has-parking='false' data-lively='true' data-evening-score='126.6' tabindex='0' role='button' aria-label='Focus map on ranked listing 22'>
           <div class='rank'>#22</div>
           <div class='title'>
             Apartment 2-room 63 m² in a period building Vienna District 20
@@ -817,14 +821,14 @@ Broader neighbourhood
 - Vienna District 20 is close to the Danube and inner districts, with a mix of residential streets and local commerce. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-23' data-rank='23' data-has-terrace='true' data-has-parking='true' tabindex='0' role='button' aria-label='Focus map on ranked listing 23'>
+        <div class='card' id='listing-23' data-rank='23' data-has-terrace='true' data-has-parking='true' data-lively='false' data-evening-score='20.3' tabindex='0' role='button' aria-label='Focus map on ranked listing 23'>
           <div class='rank'>#23</div>
           <div class='title'>
             Apartment 3-room 72 m² in a new-build Vienna District 20
             <div style='font-size:11px;color:#666;font-weight:400'>(DE: Eigengarten! Gut aufgeteilte 3-Zimmer Wohnung mit Loggia &amp; Garten)</div>
           </div>
           <div class='meta'>€480,000 · 71.75 m² · 3 rooms [Bezirk=district; Neubau=newer-build category]  · Wien, 20. Bezirk, Brigittenau</div>
-          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span><span class='badge badge-parking'>Garage/Parking</span></div>
+          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span><span class='badge badge-parking'>Garage/Parking</span><span class='badge badge-quiet'>Quiet evenings (proxy)</span></div>
           
           <div class='links'><a target='_blank' rel='noreferrer' href='https://translate.google.com/translate?sl=auto&amp;tl=en&amp;u=https%3A%2F%2Fwww.willhaben.at%2Fiad%2Fimmobilien%2Fd%2Feigentumswohnung%2Fwien%2Fwien-1200-brigittenau%2Feigengarten-gut-aufgeteilte-3-zimmer-wohnung-mit-loggia-garten-1189629875%2F'><b>Ad (EN)</b></a> | <a target='_blank' rel='noreferrer' href='https://www.willhaben.at/iad/immobilien/d/eigentumswohnung/wien/wien-1200-brigittenau/eigengarten-gut-aufgeteilte-3-zimmer-wohnung-mit-loggia-garten-1189629875/'><b>Ad</b></a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/search/?api=1&amp;query=48.244698,16.37169'>Maps</a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;viewpoint=48.244698,16.37169'>Street View</a></div>
           <div class='summary'>Property
@@ -850,14 +854,14 @@ Broader neighbourhood
 - Vienna District 20 is close to the Danube and inner districts, with a mix of residential streets and local commerce. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-24' data-rank='24' data-has-terrace='true' data-has-parking='true' tabindex='0' role='button' aria-label='Focus map on ranked listing 24'>
+        <div class='card' id='listing-24' data-rank='24' data-has-terrace='true' data-has-parking='true' data-lively='false' data-evening-score='12.0' tabindex='0' role='button' aria-label='Focus map on ranked listing 24'>
           <div class='rank'>#24</div>
           <div class='title'>
             Apartment 3-room 69 m² Vienna District 20
             <div style='font-size:11px;color:#666;font-weight:400'>(DE: SOLEY - 3-Zimmer Wohnung mit Balkon - Ihr neues Zuhause! - Top 45)</div>
           </div>
           <div class='meta'>€540,000 · 69.26 m² · 3 rooms [Bezirk=district]  · Leystr. 122, Wien, 20. Bezirk, Brigittenau</div>
-          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span><span class='badge badge-parking'>Garage/Parking</span></div>
+          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span><span class='badge badge-parking'>Garage/Parking</span><span class='badge badge-quiet'>Quiet evenings (proxy)</span></div>
           
           <div class='links'><a target='_blank' rel='noreferrer' href='https://translate.google.com/translate?sl=auto&amp;tl=en&amp;u=https%3A%2F%2Fwww.willhaben.at%2Fiad%2Fimmobilien%2Fd%2Feigentumswohnung%2Fwien%2Fwien-1200-brigittenau%2Fsoley-3-zimmer-wohnung-mit-balkon-ihr-neues-zuhause-top-45-1618150871%2F'><b>Ad (EN)</b></a> | <a target='_blank' rel='noreferrer' href='https://www.willhaben.at/iad/immobilien/d/eigentumswohnung/wien/wien-1200-brigittenau/soley-3-zimmer-wohnung-mit-balkon-ihr-neues-zuhause-top-45-1618150871/'><b>Ad</b></a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/search/?api=1&amp;query=48.23287,16.38878'>Maps</a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;viewpoint=48.23287,16.38878'>Street View</a></div>
           <div class='summary'>Property
@@ -880,14 +884,14 @@ Broader neighbourhood
 - Vienna District 20 is close to the Danube and inner districts, with a mix of residential streets and local commerce. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-25' data-rank='25' data-has-terrace='false' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 25'>
+        <div class='card' id='listing-25' data-rank='25' data-has-terrace='false' data-has-parking='false' data-lively='false' data-evening-score='24.3' tabindex='0' role='button' aria-label='Focus map on ranked listing 25'>
           <div class='rank'>#25</div>
           <div class='title'>
             Newly renovated 3-room 73 m² in a new-build Vienna District 18
             <div style='font-size:11px;color:#666;font-weight:400'>(DE: ROOF TOP WÄHRING! - TOLLE INVESTMENTMÖGLICHKEIT IM HERZEN DES 18. BEZIRKS!)</div>
           </div>
           <div class='meta'>€459,000 · 72.85 m² · 3 rooms [Bezirk=district; Neubau=newer-build category; Lift=elevator]  · Wien, 18. Bezirk, Währing</div>
-          
+          <div class='badges'><span class='badge badge-quiet'>Quiet evenings (proxy)</span></div>
           <div class='warn'>Address/map mismatch flagged (likely approximate pin).</div>
           <div class='links'><a target='_blank' rel='noreferrer' href='https://translate.google.com/translate?sl=auto&amp;tl=en&amp;u=https%3A%2F%2Fwww.willhaben.at%2Fiad%2Fimmobilien%2Fd%2Feigentumswohnung%2Fwien%2Fwien-1180-waehring%2Froof-top-waehring-tolle-investmentmoeglichkeit-im-herzen-des-18-bezirks-1954999103%2F'><b>Ad (EN)</b></a> | <a target='_blank' rel='noreferrer' href='https://www.willhaben.at/iad/immobilien/d/eigentumswohnung/wien/wien-1180-waehring/roof-top-waehring-tolle-investmentmoeglichkeit-im-herzen-des-18-bezirks-1954999103/'><b>Ad</b></a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/search/?api=1&amp;query=48.231224,16.346407'>Maps</a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;viewpoint=48.231224,16.346407'>Street View</a></div>
           <div class='summary'>Property
@@ -913,14 +917,14 @@ Broader neighbourhood
 - Vienna District 18 is residential with a mix of apartment blocks and greener slopes; generally quieter. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-26' data-rank='26' data-has-terrace='true' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 26'>
+        <div class='card' id='listing-26' data-rank='26' data-has-terrace='true' data-has-parking='false' data-lively='false' data-evening-score='28.8' tabindex='0' role='button' aria-label='Focus map on ranked listing 26'>
           <div class='rank'>#26</div>
           <div class='title'>
             Apartment 3-room 76 m² in a new-build Vienna District 18
             <div style='font-size:11px;color:#666;font-weight:400'>(DE: Moderne 3-Zimmer-Wohnung in 1180 Wien - Erstbezug zum Kaufpreis von 499.000 EUR!)</div>
           </div>
           <div class='meta'>€499,000 · 76.01 m² · 3 rooms [Bezirk=district; Neubau=newer-build category; Erstbezug=first occupancy]  · Martinstraße 43, Wien, 18. Bezirk, Währing</div>
-          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span></div>
+          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span><span class='badge badge-quiet'>Quiet evenings (proxy)</span></div>
           
           <div class='links'><a target='_blank' rel='noreferrer' href='https://translate.google.com/translate?sl=auto&amp;tl=en&amp;u=https%3A%2F%2Fwww.willhaben.at%2Fiad%2Fimmobilien%2Fd%2Feigentumswohnung%2Fwien%2Fwien-1180-waehring%2Fmoderne-3-zimmer-wohnung-in-1180-wien-erstbezug-zum-kaufpreis-von-499-000-eur-1372936990%2F'><b>Ad (EN)</b></a> | <a target='_blank' rel='noreferrer' href='https://www.willhaben.at/iad/immobilien/d/eigentumswohnung/wien/wien-1180-waehring/moderne-3-zimmer-wohnung-in-1180-wien-erstbezug-zum-kaufpreis-von-499-000-eur-1372936990/'><b>Ad</b></a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/search/?api=1&amp;query=48.2218603,16.3411917'>Maps</a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;viewpoint=48.2218603,16.3411917'>Street View</a></div>
           <div class='summary'>Property
@@ -946,14 +950,14 @@ Broader neighbourhood
 - Vienna District 18 is residential with a mix of apartment blocks and greener slopes; generally quieter. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-27' data-rank='27' data-has-terrace='false' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 27'>
+        <div class='card' id='listing-27' data-rank='27' data-has-terrace='false' data-has-parking='false' data-lively='false' data-evening-score='33.7' tabindex='0' role='button' aria-label='Focus map on ranked listing 27'>
           <div class='rank'>#27</div>
           <div class='title'>
             Apartment 2-room 67 m² in a period building Vienna District 18
             <div style='font-size:11px;color:#666;font-weight:400'>(DE: Altbau wie man ihn liebt! Währing von seiner besten Seite! Traumhaft saniertes Altbauhaus + Ruhige Seitengasse + Super beliebtes Grätzl! Viel Grün + Viel Charme! Jetzt zugreifen!)</div>
           </div>
           <div class='meta'>€535,000 · 67.33 m² · 2 rooms [Bezirk=district; Altbau=pre-war/older building category; Lift=elevator]  · Hofstattgasse, Wien, 18. Bezirk, Währing</div>
-          
+          <div class='badges'><span class='badge badge-quiet'>Quiet evenings (proxy)</span></div>
           
           <div class='links'><a target='_blank' rel='noreferrer' href='https://translate.google.com/translate?sl=auto&amp;tl=en&amp;u=https%3A%2F%2Fwww.willhaben.at%2Fiad%2Fimmobilien%2Fd%2Feigentumswohnung%2Fwien%2Fwien-1180-waehring%2Faltbau-wie-man-ihn-liebt-waehring-von-seiner-besten-seite-traumhaft-saniertes-altbauhaus-ruhige-seitengasse-super-beliebtes-graetzl-viel-gruen-viel-charme-jetzt-zugreifen-1461603771%2F'><b>Ad (EN)</b></a> | <a target='_blank' rel='noreferrer' href='https://www.willhaben.at/iad/immobilien/d/eigentumswohnung/wien/wien-1180-waehring/altbau-wie-man-ihn-liebt-waehring-von-seiner-besten-seite-traumhaft-saniertes-altbauhaus-ruhige-seitengasse-super-beliebtes-graetzl-viel-gruen-viel-charme-jetzt-zugreifen-1461603771/'><b>Ad</b></a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/search/?api=1&amp;query=48.228497,16.339895'>Maps</a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;viewpoint=48.228497,16.339895'>Street View</a></div>
           <div class='summary'>Property
@@ -979,14 +983,14 @@ Broader neighbourhood
 - Vienna District 18 is residential with a mix of apartment blocks and greener slopes; generally quieter. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-28' data-rank='28' data-has-terrace='false' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 28'>
+        <div class='card' id='listing-28' data-rank='28' data-has-terrace='false' data-has-parking='false' data-lively='false' data-evening-score='83.4' tabindex='0' role='button' aria-label='Focus map on ranked listing 28'>
           <div class='rank'>#28</div>
           <div class='title'>
             Apartment 1-room 31 m² in a period building Vienna District 15
             <div style='font-size:11px;color:#666;font-weight:400'>(DE: Ein Zuhause mit Charakter - hell, ruhig und voller Möglichkeiten)</div>
           </div>
           <div class='meta'>€120,000 · 31 m² · 1 rooms [Bezirk=district; Altbau=pre-war/older building category]  · Meiselstraße 28, Wien, 15. Bezirk, Rudolfsheim-Fünfhaus</div>
-          
+          <div class='badges'><span class='badge badge-quiet'>Quiet evenings (proxy)</span></div>
           
           <div class='links'><a target='_blank' rel='noreferrer' href='https://translate.google.com/translate?sl=auto&amp;tl=en&amp;u=https%3A%2F%2Fwww.willhaben.at%2Fiad%2Fimmobilien%2Fd%2Feigentumswohnung%2Fwien%2Fwien-1150-rudolfsheim-fuenfhaus%2Fein-zuhause-mit-charakter-hell-ruhig-und-voller-moeglichkeiten-1940591038%2F'><b>Ad (EN)</b></a> | <a target='_blank' rel='noreferrer' href='https://www.willhaben.at/iad/immobilien/d/eigentumswohnung/wien/wien-1150-rudolfsheim-fuenfhaus/ein-zuhause-mit-charakter-hell-ruhig-und-voller-moeglichkeiten-1940591038/'><b>Ad</b></a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/search/?api=1&amp;query=48.197998,16.317413'>Maps</a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;viewpoint=48.197998,16.317413'>Street View</a></div>
           <div class='summary'>Property
@@ -1012,14 +1016,14 @@ Broader neighbourhood
 - Vienna District 15 is an urban district with strong public transport; micro-areas differ a lot. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-29' data-rank='29' data-has-terrace='true' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 29'>
+        <div class='card' id='listing-29' data-rank='29' data-has-terrace='true' data-has-parking='false' data-lively='false' data-evening-score='36.9' tabindex='0' role='button' aria-label='Focus map on ranked listing 29'>
           <div class='rank'>#29</div>
           <div class='title'>
             Apartment 2-room 57 m² in a period building Vienna District 15
             <div style='font-size:11px;color:#666;font-weight:400'>(DE: 2-Zimmer-Dachgeschosswohnung (Massivbauweise) in generalsaniertem Altbau mit Loggia)</div>
           </div>
           <div class='meta'>€490,000 · 56.86 m² · 2 rooms [Bezirk=district; Altbau=pre-war/older building category; Lift=elevator]  · Akkonplatz 2, Wien, 15. Bezirk, Rudolfsheim-Fünfhaus</div>
-          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span></div>
+          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span><span class='badge badge-quiet'>Quiet evenings (proxy)</span></div>
           
           <div class='links'><a target='_blank' rel='noreferrer' href='https://translate.google.com/translate?sl=auto&amp;tl=en&amp;u=https%3A%2F%2Fwww.willhaben.at%2Fiad%2Fimmobilien%2Fd%2Feigentumswohnung%2Fwien%2Fwien-1150-rudolfsheim-fuenfhaus%2F2-zimmer-dachgeschosswohnung-massivbauweise-in-generalsaniertem-altbau-mit-loggia-1632072640%2F'><b>Ad (EN)</b></a> | <a target='_blank' rel='noreferrer' href='https://www.willhaben.at/iad/immobilien/d/eigentumswohnung/wien/wien-1150-rudolfsheim-fuenfhaus/2-zimmer-dachgeschosswohnung-massivbauweise-in-generalsaniertem-altbau-mit-loggia-1632072640/'><b>Ad</b></a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/search/?api=1&amp;query=48.201603,16.314754'>Maps</a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;viewpoint=48.201603,16.314754'>Street View</a></div>
           <div class='summary'>Property
@@ -1045,14 +1049,14 @@ Broader neighbourhood
 - Vienna District 15 is an urban district with strong public transport; micro-areas differ a lot. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-30' data-rank='30' data-has-terrace='true' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 30'>
+        <div class='card' id='listing-30' data-rank='30' data-has-terrace='true' data-has-parking='false' data-lively='false' data-evening-score='31.3' tabindex='0' role='button' aria-label='Focus map on ranked listing 30'>
           <div class='rank'>#30</div>
           <div class='title'>
             Apartment 3-room 69 m² in a period building Vienna District 15
             <div style='font-size:11px;color:#666;font-weight:400'>(DE: Sanierte ALTBAU TERRASSENWOHNUNG ohne Gegenüber | PARKBLICK | Ca. 2 Min. zur U4 SCHÖNBRUNN | Ca. 15 Min. in den 1. Bezirk)</div>
           </div>
           <div class='meta'>€499,500 · 68.88 m² · 3 rooms [Bezirk=district; Altbau=pre-war/older building category]  · Wien, 15. Bezirk, Rudolfsheim-Fünfhaus</div>
-          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span></div>
+          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span><span class='badge badge-quiet'>Quiet evenings (proxy)</span></div>
           <div class='warn'>Address/map mismatch flagged (likely approximate pin).</div>
           <div class='links'><a target='_blank' rel='noreferrer' href='https://translate.google.com/translate?sl=auto&amp;tl=en&amp;u=https%3A%2F%2Fwww.willhaben.at%2Fiad%2Fimmobilien%2Fd%2Feigentumswohnung%2Fwien%2Fwien-1150-rudolfsheim-fuenfhaus%2Fsanierte-altbau-terrassenwohnung-ohne-gegenueber-parkblick-ca-2-min-zur-u4-schoenbrunn-ca-15-min-in-den-1-bezirk-1789963873%2F'><b>Ad (EN)</b></a> | <a target='_blank' rel='noreferrer' href='https://www.willhaben.at/iad/immobilien/d/eigentumswohnung/wien/wien-1150-rudolfsheim-fuenfhaus/sanierte-altbau-terrassenwohnung-ohne-gegenueber-parkblick-ca-2-min-zur-u4-schoenbrunn-ca-15-min-in-den-1-bezirk-1789963873/'><b>Ad</b></a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/search/?api=1&amp;query=48.18827,16.3263'>Maps</a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;viewpoint=48.18827,16.3263'>Street View</a></div>
           <div class='summary'>Property
@@ -1078,14 +1082,14 @@ Broader neighbourhood
 - Vienna District 15 is an urban district with strong public transport; micro-areas differ a lot. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-31' data-rank='31' data-has-terrace='true' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 31'>
+        <div class='card' id='listing-31' data-rank='31' data-has-terrace='true' data-has-parking='false' data-lively='false' data-evening-score='56.3' tabindex='0' role='button' aria-label='Focus map on ranked listing 31'>
           <div class='rank'>#31</div>
           <div class='title'>
             Apartment 2-room 40 m² in a new-build Vienna District 16
             <div style='font-size:11px;color:#666;font-weight:400'>(DE: Hip wohnen in Neulerchenfeld (Neubau, Erstbezug), perfekte Infrastruktur)</div>
           </div>
           <div class='meta'>€255,200 · 40.28 m² · 2 rooms [Bezirk=district; Neubau=newer-build category; Straßenbahn=tram; Erstbezug=first occupancy]  · Wien, 16. Bezirk, Ottakring</div>
-          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span></div>
+          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span><span class='badge badge-quiet'>Quiet evenings (proxy)</span></div>
           
           <div class='links'><a target='_blank' rel='noreferrer' href='https://translate.google.com/translate?sl=auto&amp;tl=en&amp;u=https%3A%2F%2Fwww.willhaben.at%2Fiad%2Fimmobilien%2Fd%2Feigentumswohnung%2Fwien%2Fwien-1160-ottakring%2Fhip-wohnen-in-neulerchenfeld-neubau-erstbezug-perfekte-infrastruktur-1160464452%2F'><b>Ad (EN)</b></a> | <a target='_blank' rel='noreferrer' href='https://www.willhaben.at/iad/immobilien/d/eigentumswohnung/wien/wien-1160-ottakring/hip-wohnen-in-neulerchenfeld-neubau-erstbezug-perfekte-infrastruktur-1160464452/'><b>Ad</b></a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/search/?api=1&amp;query=48.207047,16.33551'>Maps</a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;viewpoint=48.207047,16.33551'>Street View</a></div>
           <div class='summary'>Property
@@ -1111,14 +1115,14 @@ Broader neighbourhood
 - Vienna District 16 is varied, from lively streets to hillier residential areas; often good access via tram and underground. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-32' data-rank='32' data-has-terrace='true' data-has-parking='true' tabindex='0' role='button' aria-label='Focus map on ranked listing 32'>
+        <div class='card' id='listing-32' data-rank='32' data-has-terrace='true' data-has-parking='true' data-lively='false' data-evening-score='61.8' tabindex='0' role='button' aria-label='Focus map on ranked listing 32'>
           <div class='rank'>#32</div>
           <div class='title'>
             Apartment 2-room 43 m² in a new-build Vienna District 16
             <div style='font-size:11px;color:#666;font-weight:400'>(DE: THE ARIK - Qualität, die bleibt - 2 Zimmer mit klarer Linie &amp; Weitblick)</div>
           </div>
           <div class='meta'>€287,900 · 43.34 m² · 2 rooms [Bezirk=district; Neubau=newer-build category; Straßenbahn=tram]  · Herbststraße 6-10, Wien, 16. Bezirk, Ottakring</div>
-          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span><span class='badge badge-parking'>Garage/Parking</span></div>
+          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span><span class='badge badge-parking'>Garage/Parking</span><span class='badge badge-quiet'>Quiet evenings (proxy)</span></div>
           
           <div class='links'><a target='_blank' rel='noreferrer' href='https://translate.google.com/translate?sl=auto&amp;tl=en&amp;u=https%3A%2F%2Fwww.willhaben.at%2Fiad%2Fimmobilien%2Fd%2Feigentumswohnung%2Fwien%2Fwien-1160-ottakring%2Fthe-arik-qualitaet-die-bleibt-2-zimmer-mit-klarer-linie-weitblick-1429969762%2F'><b>Ad (EN)</b></a> | <a target='_blank' rel='noreferrer' href='https://www.willhaben.at/iad/immobilien/d/eigentumswohnung/wien/wien-1160-ottakring/the-arik-qualitaet-die-bleibt-2-zimmer-mit-klarer-linie-weitblick-1429969762/'><b>Ad</b></a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/search/?api=1&amp;query=48.205574,16.335117'>Maps</a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;viewpoint=48.205574,16.335117'>Street View</a></div>
           <div class='summary'>Property
@@ -1143,14 +1147,14 @@ Broader neighbourhood
 - Vienna District 16 is varied, from lively streets to hillier residential areas; often good access via tram and underground. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-33' data-rank='33' data-has-terrace='true' data-has-parking='true' tabindex='0' role='button' aria-label='Focus map on ranked listing 33'>
+        <div class='card' id='listing-33' data-rank='33' data-has-terrace='true' data-has-parking='true' data-lively='false' data-evening-score='61.8' tabindex='0' role='button' aria-label='Focus map on ranked listing 33'>
           <div class='rank'>#33</div>
           <div class='title'>
             Apartment 2-room 41 m² in a new-build Vienna District 16
             <div style='font-size:11px;color:#666;font-weight:400'>(DE: THE ARIK - Zwischen Ottakring &amp; Neubau - 2 Zimmer mit Blick ins Grüne)</div>
           </div>
           <div class='meta'>€311,700 · 40.99 m² · 2 rooms [Bezirk=district; Neubau=newer-build category; Straßenbahn=tram]  · Herbststraße 6-10, Wien, 16. Bezirk, Ottakring</div>
-          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span><span class='badge badge-parking'>Garage/Parking</span></div>
+          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span><span class='badge badge-parking'>Garage/Parking</span><span class='badge badge-quiet'>Quiet evenings (proxy)</span></div>
           
           <div class='links'><a target='_blank' rel='noreferrer' href='https://translate.google.com/translate?sl=auto&amp;tl=en&amp;u=https%3A%2F%2Fwww.willhaben.at%2Fiad%2Fimmobilien%2Fd%2Feigentumswohnung%2Fwien%2Fwien-1160-ottakring%2Fthe-arik-zwischen-ottakring-neubau-2-zimmer-mit-blick-ins-gruene-1724754783%2F'><b>Ad (EN)</b></a> | <a target='_blank' rel='noreferrer' href='https://www.willhaben.at/iad/immobilien/d/eigentumswohnung/wien/wien-1160-ottakring/the-arik-zwischen-ottakring-neubau-2-zimmer-mit-blick-ins-gruene-1724754783/'><b>Ad</b></a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/search/?api=1&amp;query=48.205574,16.335117'>Maps</a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;viewpoint=48.205574,16.335117'>Street View</a></div>
           <div class='summary'>Property
@@ -1175,14 +1179,14 @@ Broader neighbourhood
 - Vienna District 16 is varied, from lively streets to hillier residential areas; often good access via tram and underground. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-34' data-rank='34' data-has-terrace='false' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 34'>
+        <div class='card' id='listing-34' data-rank='34' data-has-terrace='false' data-has-parking='false' data-lively='false' data-evening-score='60.4' tabindex='0' role='button' aria-label='Focus map on ranked listing 34'>
           <div class='rank'>#34</div>
           <div class='title'>
             Apartment 1-room 29 m² in a period building Vienna District 17
             <div style='font-size:11px;color:#666;font-weight:400'>(DE: HIER FÜHLEN SICH ANLEGER WOHL! SICHERE ANLAGE! Wiener Altbaujuwel für Anleger: Vermietet und renoviert!)</div>
           </div>
           <div class='meta'>€155,000 · 28.98 m² · 1 rooms [Bezirk=district; Altbau=pre-war/older building category]  · Wien, 17. Bezirk, Hernals</div>
-          
+          <div class='badges'><span class='badge badge-quiet'>Quiet evenings (proxy)</span></div>
           
           <div class='links'><a target='_blank' rel='noreferrer' href='https://translate.google.com/translate?sl=auto&amp;tl=en&amp;u=https%3A%2F%2Fwww.willhaben.at%2Fiad%2Fimmobilien%2Fd%2Feigentumswohnung%2Fwien%2Fwien-1170-hernals%2Fhier-fuehlen-sich-anleger-wohl-sichere-anlage-wiener-altbaujuwel-fuer-anleger-vermietet-und-renoviert-985724737%2F'><b>Ad (EN)</b></a> | <a target='_blank' rel='noreferrer' href='https://www.willhaben.at/iad/immobilien/d/eigentumswohnung/wien/wien-1170-hernals/hier-fuehlen-sich-anleger-wohl-sichere-anlage-wiener-altbaujuwel-fuer-anleger-vermietet-und-renoviert-985724737/'><b>Ad</b></a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/search/?api=1&amp;query=48.220055,16.321838'>Maps</a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;viewpoint=48.220055,16.321838'>Street View</a></div>
           <div class='summary'>Property
@@ -1208,14 +1212,14 @@ Broader neighbourhood
 - Vienna District 17 is mostly residential and tends to be calmer, especially further west. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-35' data-rank='35' data-has-terrace='true' data-has-parking='true' tabindex='0' role='button' aria-label='Focus map on ranked listing 35'>
+        <div class='card' id='listing-35' data-rank='35' data-has-terrace='true' data-has-parking='true' data-lively='false' data-evening-score='22.2' tabindex='0' role='button' aria-label='Focus map on ranked listing 35'>
           <div class='rank'>#35</div>
           <div class='title'>
             Apartment 4-room 96 m² in a new-build Vienna District 17
             <div style='font-size:11px;color:#666;font-weight:400'>(DE: The Anthony: Exklusive 4-Zimmer-Wohnung mit 15 m² Terrasse, Loggia und Garten)</div>
           </div>
           <div class='meta'>€573,100 · 96.03 m² · 4 rooms [Bezirk=district; Neubau=newer-build category]  · Antonigasse 79, Wien, 17. Bezirk, Hernals</div>
-          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span><span class='badge badge-parking'>Garage/Parking</span></div>
+          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span><span class='badge badge-parking'>Garage/Parking</span><span class='badge badge-quiet'>Quiet evenings (proxy)</span></div>
           
           <div class='links'><a target='_blank' rel='noreferrer' href='https://translate.google.com/translate?sl=auto&amp;tl=en&amp;u=https%3A%2F%2Fwww.willhaben.at%2Fiad%2Fimmobilien%2Fd%2Feigentumswohnung%2Fwien%2Fwien-1170-hernals%2Fthe-anthony-exklusive-4-zimmer-wohnung-mit-15-m-terrasse-loggia-und-garten-1042609330%2F'><b>Ad (EN)</b></a> | <a target='_blank' rel='noreferrer' href='https://www.willhaben.at/iad/immobilien/d/eigentumswohnung/wien/wien-1170-hernals/the-anthony-exklusive-4-zimmer-wohnung-mit-15-m-terrasse-loggia-und-garten-1042609330/'><b>Ad</b></a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/search/?api=1&amp;query=48.22443,16.332588'>Maps</a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;viewpoint=48.22443,16.332588'>Street View</a></div>
           <div class='summary'>Property
@@ -1241,7 +1245,7 @@ Broader neighbourhood
 - Vienna District 17 is mostly residential and tends to be calmer, especially further west. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-36' data-rank='36' data-has-terrace='false' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 36'>
+        <div class='card' id='listing-36' data-rank='36' data-has-terrace='false' data-has-parking='false' data-lively='true' data-evening-score='90.1' tabindex='0' role='button' aria-label='Focus map on ranked listing 36'>
           <div class='rank'>#36</div>
           <div class='title'>
             Apartment 2-room 61 m² Vienna District 10
@@ -1273,14 +1277,14 @@ Broader neighbourhood
 - Vienna District 10 is large and diverse, ranging from dense urban streets to quieter residential pockets; transit varies by location. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-37' data-rank='37' data-has-terrace='false' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 37'>
+        <div class='card' id='listing-37' data-rank='37' data-has-terrace='false' data-has-parking='false' data-lively='false' data-evening-score='29.1' tabindex='0' role='button' aria-label='Focus map on ranked listing 37'>
           <div class='rank'>#37</div>
           <div class='title'>
             Apartment 4-room 87 m² in a period building Vienna District 10
             <div style='font-size:11px;color:#666;font-weight:400'>(DE: Flexibel Wohnen - Familienhit oder ideal fürs Home Office! 4-Zi-Wohnung mit guter Infrastruktur)</div>
           </div>
           <div class='meta'>€299,900 · 87.24 m² · 4 rooms [Bezirk=district; Altbau=pre-war/older building category; Lift=elevator]  · Knöllgasse, Wien, 10. Bezirk, Favoriten</div>
-          
+          <div class='badges'><span class='badge badge-quiet'>Quiet evenings (proxy)</span></div>
           
           <div class='links'><a target='_blank' rel='noreferrer' href='https://translate.google.com/translate?sl=auto&amp;tl=en&amp;u=https%3A%2F%2Fwww.willhaben.at%2Fiad%2Fimmobilien%2Fd%2Feigentumswohnung%2Fwien%2Fwien-1100-favoriten%2Fflexibel-wohnen-familienhit-oder-ideal-fuers-home-office-4-zi-wohnung-mit-guter-infrastruktur-1798782103%2F'><b>Ad (EN)</b></a> | <a target='_blank' rel='noreferrer' href='https://www.willhaben.at/iad/immobilien/d/eigentumswohnung/wien/wien-1100-favoriten/flexibel-wohnen-familienhit-oder-ideal-fuers-home-office-4-zi-wohnung-mit-guter-infrastruktur-1798782103/'><b>Ad</b></a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/search/?api=1&amp;query=48.174107,16.355051'>Maps</a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;viewpoint=48.174107,16.355051'>Street View</a></div>
           <div class='summary'>Property
@@ -1306,7 +1310,7 @@ Broader neighbourhood
 - Vienna District 10 is large and diverse, ranging from dense urban streets to quieter residential pockets; transit varies by location. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-38' data-rank='38' data-has-terrace='true' data-has-parking='true' tabindex='0' role='button' aria-label='Focus map on ranked listing 38'>
+        <div class='card' id='listing-38' data-rank='38' data-has-terrace='true' data-has-parking='true' data-lively='true' data-evening-score='134.0' tabindex='0' role='button' aria-label='Focus map on ranked listing 38'>
           <div class='rank'>#38</div>
           <div class='title'>
             Apartment 2-room 58 m² in a new-build Vienna District 10
@@ -1339,14 +1343,14 @@ Broader neighbourhood
 - Vienna District 10 is large and diverse, ranging from dense urban streets to quieter residential pockets; transit varies by location. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-39' data-rank='39' data-has-terrace='false' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 39'>
+        <div class='card' id='listing-39' data-rank='39' data-has-terrace='false' data-has-parking='false' data-lively='false' data-evening-score='14.5' tabindex='0' role='button' aria-label='Focus map on ranked listing 39'>
           <div class='rank'>#39</div>
           <div class='title'>
             Apartment 2-room 39 m² in a period building Vienna District 19
             <div style='font-size:11px;color:#666;font-weight:400'>(DE: RARITÄT - Sanierter Altbau mit traumhaften Garten - 2 Zimmer)</div>
           </div>
           <div class='meta'>€259,000 · 38.65 m² · 2 rooms [Bezirk=district; Altbau=pre-war/older building category]  · Wien, 19. Bezirk, Döbling</div>
-          
+          <div class='badges'><span class='badge badge-quiet'>Quiet evenings (proxy)</span></div>
           <div class='warn'>Address/map mismatch flagged (likely approximate pin).</div>
           <div class='links'><a target='_blank' rel='noreferrer' href='https://translate.google.com/translate?sl=auto&amp;tl=en&amp;u=https%3A%2F%2Fwww.willhaben.at%2Fiad%2Fimmobilien%2Fd%2Feigentumswohnung%2Fwien%2Fwien-1190-doebling%2Fraritaet-sanierter-altbau-mit-traumhaften-garten-2-zimmer-1594852613%2F'><b>Ad (EN)</b></a> | <a target='_blank' rel='noreferrer' href='https://www.willhaben.at/iad/immobilien/d/eigentumswohnung/wien/wien-1190-doebling/raritaet-sanierter-altbau-mit-traumhaften-garten-2-zimmer-1594852613/'><b>Ad</b></a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/search/?api=1&amp;query=48.246418,16.361929'>Maps</a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;viewpoint=48.246418,16.361929'>Street View</a></div>
           <div class='summary'>Property
@@ -1372,14 +1376,14 @@ Broader neighbourhood
 - Vienna District 19 is known for greenery and hillside neighbourhoods; typically quieter and more upmarket. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-40' data-rank='40' data-has-terrace='true' data-has-parking='true' tabindex='0' role='button' aria-label='Focus map on ranked listing 40'>
+        <div class='card' id='listing-40' data-rank='40' data-has-terrace='true' data-has-parking='true' data-lively='false' data-evening-score='20.6' tabindex='0' role='button' aria-label='Focus map on ranked listing 40'>
           <div class='rank'>#40</div>
           <div class='title'>
             Apartment 4-room 130 m² in a new-build Vienna District 19
             <div style='font-size:11px;color:#666;font-weight:400'>(DE: 4 Zimmer, 135 m² WFL., Terrasse und XXL Garagenplatz: Ihr Zuhause direkt am Nussberg | ZELLMANN IMMOBILIEN)</div>
           </div>
           <div class='meta'>€649,000 · 130 m² · 4 rooms [Bezirk=district; Neubau=newer-build category; Lift=elevator]  · Wien, 19. Bezirk, Döbling</div>
-          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span><span class='badge badge-parking'>Garage/Parking</span></div>
+          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span><span class='badge badge-parking'>Garage/Parking</span><span class='badge badge-quiet'>Quiet evenings (proxy)</span></div>
           
           <div class='links'><a target='_blank' rel='noreferrer' href='https://translate.google.com/translate?sl=auto&amp;tl=en&amp;u=https%3A%2F%2Fwww.willhaben.at%2Fiad%2Fimmobilien%2Fd%2Feigentumswohnung%2Fwien%2Fwien-1190-doebling%2F4-zimmer-135-m-wfl-terrasse-und-xxl-garagenplatz-ihr-zuhause-direkt-am-nussberg-zellmann-immobilien-789326469%2F'><b>Ad (EN)</b></a> | <a target='_blank' rel='noreferrer' href='https://www.willhaben.at/iad/immobilien/d/eigentumswohnung/wien/wien-1190-doebling/4-zimmer-135-m-wfl-terrasse-und-xxl-garagenplatz-ihr-zuhause-direkt-am-nussberg-zellmann-immobilien-789326469/'><b>Ad</b></a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/search/?api=1&amp;query=48.25928,16.363087'>Maps</a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;viewpoint=48.25928,16.363087'>Street View</a></div>
           <div class='summary'>Property
@@ -1405,7 +1409,7 @@ Broader neighbourhood
 - Vienna District 19 is known for greenery and hillside neighbourhoods; typically quieter and more upmarket. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-41' data-rank='41' data-has-terrace='false' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 41'>
+        <div class='card' id='listing-41' data-rank='41' data-has-terrace='false' data-has-parking='false' data-lively='true' data-evening-score='112.2' tabindex='0' role='button' aria-label='Focus map on ranked listing 41'>
           <div class='rank'>#41</div>
           <div class='title'>
             Apartment 2-room 58 m² in a new-build Vienna District 12
@@ -1438,7 +1442,7 @@ Broader neighbourhood
 - Vienna District 12 is residential with local shopping streets; typically good everyday amenities. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-42' data-rank='42' data-has-terrace='true' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 42'>
+        <div class='card' id='listing-42' data-rank='42' data-has-terrace='true' data-has-parking='false' data-lively='true' data-evening-score='88.6' tabindex='0' role='button' aria-label='Focus map on ranked listing 42'>
           <div class='rank'>#42</div>
           <div class='title'>
             Apartment 3-room 90 m² Vienna District 12
@@ -1470,14 +1474,14 @@ Broader neighbourhood
 - Vienna District 12 is residential with local shopping streets; typically good everyday amenities. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-43' data-rank='43' data-has-terrace='true' data-has-parking='true' tabindex='0' role='button' aria-label='Focus map on ranked listing 43'>
+        <div class='card' id='listing-43' data-rank='43' data-has-terrace='true' data-has-parking='true' data-lively='false' data-evening-score='44.7' tabindex='0' role='button' aria-label='Focus map on ranked listing 43'>
           <div class='rank'>#43</div>
           <div class='title'>
             Apartment 3-room 68 m² in a new-build Vienna District 12
             <div style='font-size:11px;color:#666;font-weight:400'>(DE: ERSTBEZUG mit ca. 8 m² LOGGIA | 3-Zimmer Neubau | Fernwärme | TG-Stellplatz optional | Nachhaltiges Wohnbauprojekt)</div>
           </div>
           <div class='meta'>€528,500 · 68.17 m² · 3 rooms [Bezirk=district; Neubau=newer-build category; Erstbezug=first occupancy]  · Arndtstraße 50, Wien, 12. Bezirk, Meidling</div>
-          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span><span class='badge badge-parking'>Garage/Parking</span></div>
+          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span><span class='badge badge-parking'>Garage/Parking</span><span class='badge badge-quiet'>Quiet evenings (proxy)</span></div>
           
           <div class='links'><a target='_blank' rel='noreferrer' href='https://translate.google.com/translate?sl=auto&amp;tl=en&amp;u=https%3A%2F%2Fwww.willhaben.at%2Fiad%2Fimmobilien%2Fd%2Feigentumswohnung%2Fwien%2Fwien-1120-meidling%2Ferstbezug-mit-ca-8-m-loggia-3-zimmer-neubau-fernwaerme-tg-stellplatz-optional-nachhaltiges-wohnbauprojekt-2058088035%2F'><b>Ad (EN)</b></a> | <a target='_blank' rel='noreferrer' href='https://www.willhaben.at/iad/immobilien/d/eigentumswohnung/wien/wien-1120-meidling/erstbezug-mit-ca-8-m-loggia-3-zimmer-neubau-fernwaerme-tg-stellplatz-optional-nachhaltiges-wohnbauprojekt-2058088035/'><b>Ad</b></a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/search/?api=1&amp;query=48.18376,16.336899'>Maps</a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;viewpoint=48.18376,16.336899'>Street View</a></div>
           <div class='summary'>Property
@@ -1503,14 +1507,14 @@ Broader neighbourhood
 - Vienna District 12 is residential with local shopping streets; typically good everyday amenities. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-44' data-rank='44' data-has-terrace='true' data-has-parking='true' tabindex='0' role='button' aria-label='Focus map on ranked listing 44'>
+        <div class='card' id='listing-44' data-rank='44' data-has-terrace='true' data-has-parking='true' data-lively='false' data-evening-score='-0.4' tabindex='0' role='button' aria-label='Focus map on ranked listing 44'>
           <div class='rank'>#44</div>
           <div class='title'>
             Apartment 3-room 61 m² in a new-build Vienna District 21
             <div style='font-size:11px;color:#666;font-weight:400'>(DE: Nähe Donauzentrum: Traumhafte 3-Zimmer Wohnung mit 15qm Balkon)</div>
           </div>
           <div class='meta'>€398,000 · 61.26 m² · 3 rooms [Bezirk=district; Neubau=newer-build category; Lift=elevator]  · An der Schanze, Wien, 21. Bezirk, Floridsdorf</div>
-          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span><span class='badge badge-parking'>Garage/Parking</span></div>
+          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span><span class='badge badge-parking'>Garage/Parking</span><span class='badge badge-quiet'>Quiet evenings (proxy)</span></div>
           
           <div class='links'><a target='_blank' rel='noreferrer' href='https://translate.google.com/translate?sl=auto&amp;tl=en&amp;u=https%3A%2F%2Fwww.willhaben.at%2Fiad%2Fimmobilien%2Fd%2Feigentumswohnung%2Fwien%2Fwien-1210-floridsdorf%2Fnaehe-donauzentrum-traumhafte-3-zimmer-wohnung-mit-15qm-balkon-1590234532%2F'><b>Ad (EN)</b></a> | <a target='_blank' rel='noreferrer' href='https://www.willhaben.at/iad/immobilien/d/eigentumswohnung/wien/wien-1210-floridsdorf/naehe-donauzentrum-traumhafte-3-zimmer-wohnung-mit-15qm-balkon-1590234532/'><b>Ad</b></a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/search/?api=1&amp;query=48.24795,16.420444'>Maps</a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;viewpoint=48.24795,16.420444'>Street View</a></div>
           <div class='summary'>Property
@@ -1536,14 +1540,14 @@ Broader neighbourhood
 - Vienna District 21 is a large, more suburban district with varied centres; commutes depend on proximity to rail/underground. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-45' data-rank='45' data-has-terrace='true' data-has-parking='true' tabindex='0' role='button' aria-label='Focus map on ranked listing 45'>
+        <div class='card' id='listing-45' data-rank='45' data-has-terrace='true' data-has-parking='true' data-lively='false' data-evening-score='-0.4' tabindex='0' role='button' aria-label='Focus map on ranked listing 45'>
           <div class='rank'>#45</div>
           <div class='title'>
             Apartment 4-room 80 m² in a new-build Vienna District 21
             <div style='font-size:11px;color:#666;font-weight:400'>(DE: 2026! - Provisionsfreie 4 Zimmer Wohnung mit zwei Balkonen)</div>
           </div>
           <div class='meta'>€545,000 · 80.47 m² · 4 rooms [Bezirk=district; Neubau=newer-build category; Lift=elevator]  · An der Schanze, Wien, 21. Bezirk, Floridsdorf</div>
-          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span><span class='badge badge-parking'>Garage/Parking</span></div>
+          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span><span class='badge badge-parking'>Garage/Parking</span><span class='badge badge-quiet'>Quiet evenings (proxy)</span></div>
           
           <div class='links'><a target='_blank' rel='noreferrer' href='https://translate.google.com/translate?sl=auto&amp;tl=en&amp;u=https%3A%2F%2Fwww.willhaben.at%2Fiad%2Fimmobilien%2Fd%2Feigentumswohnung%2Fwien%2Fwien-1210-floridsdorf%2F2026-provisionsfreie-4-zimmer-wohnung-mit-zwei-balkonen-1247318561%2F'><b>Ad (EN)</b></a> | <a target='_blank' rel='noreferrer' href='https://www.willhaben.at/iad/immobilien/d/eigentumswohnung/wien/wien-1210-floridsdorf/2026-provisionsfreie-4-zimmer-wohnung-mit-zwei-balkonen-1247318561/'><b>Ad</b></a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/search/?api=1&amp;query=48.24795,16.420444'>Maps</a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;viewpoint=48.24795,16.420444'>Street View</a></div>
           <div class='summary'>Property
@@ -1569,14 +1573,14 @@ Broader neighbourhood
 - Vienna District 21 is a large, more suburban district with varied centres; commutes depend on proximity to rail/underground. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-46' data-rank='46' data-has-terrace='true' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 46'>
+        <div class='card' id='listing-46' data-rank='46' data-has-terrace='true' data-has-parking='false' data-lively='false' data-evening-score='64.0' tabindex='0' role='button' aria-label='Focus map on ranked listing 46'>
           <div class='rank'>#46</div>
           <div class='title'>
             Apartment 3-room 72 m² in a new-build Vienna District 11
             <div style='font-size:11px;color:#666;font-weight:400'>(DE: Moderne 3-Zimmer-Wohnung mit Loggia und Grünblick | Nähe U3 Simmering)</div>
           </div>
           <div class='meta'>€299,000 · 72 m² · 3 rooms [Bezirk=district; Neubau=newer-build category]  · Wien, 11. Bezirk, Simmering</div>
-          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span></div>
+          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span><span class='badge badge-quiet'>Quiet evenings (proxy)</span></div>
           
           <div class='links'><a target='_blank' rel='noreferrer' href='https://translate.google.com/translate?sl=auto&amp;tl=en&amp;u=https%3A%2F%2Fwww.willhaben.at%2Fiad%2Fimmobilien%2Fd%2Feigentumswohnung%2Fwien%2Fwien-1110-simmering%2Fmoderne-3-zimmer-wohnung-mit-loggia-und-gruenblick-naehe-u3-simmering-880583582%2F'><b>Ad (EN)</b></a> | <a target='_blank' rel='noreferrer' href='https://www.willhaben.at/iad/immobilien/d/eigentumswohnung/wien/wien-1110-simmering/moderne-3-zimmer-wohnung-mit-loggia-und-gruenblick-naehe-u3-simmering-880583582/'><b>Ad</b></a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/search/?api=1&amp;query=48.171356,16.418049'>Maps</a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;viewpoint=48.171356,16.418049'>Street View</a></div>
           <div class='summary'>Property
@@ -1602,14 +1606,14 @@ Broader neighbourhood
 - Vienna District 11 is primarily residential with industrial pockets; generally more suburban in feel. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-47' data-rank='47' data-has-terrace='true' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 47'>
+        <div class='card' id='listing-47' data-rank='47' data-has-terrace='true' data-has-parking='false' data-lively='false' data-evening-score='6.1' tabindex='0' role='button' aria-label='Focus map on ranked listing 47'>
           <div class='rank'>#47</div>
           <div class='title'>
             Apartment 2-room 64 m² in a new-build Vienna District 11
             <div style='font-size:11px;color:#666;font-weight:400'>(DE: Provisionsfreie 2-Zimmer Wohnung in U3 Nähe!)</div>
           </div>
           <div class='meta'>€425,500 · 63.53 m² · 2 rooms [Bezirk=district; Neubau=newer-build category; Lift=elevator]  · Brambillagasse 20, Wien, 11. Bezirk, Simmering</div>
-          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span></div>
+          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span><span class='badge badge-quiet'>Quiet evenings (proxy)</span></div>
           
           <div class='links'><a target='_blank' rel='noreferrer' href='https://translate.google.com/translate?sl=auto&amp;tl=en&amp;u=https%3A%2F%2Fwww.willhaben.at%2Fiad%2Fimmobilien%2Fd%2Feigentumswohnung%2Fwien%2Fwien-1110-simmering%2Fprovisionsfreie-2-zimmer-wohnung-in-u3-naehe-1268364171%2F'><b>Ad (EN)</b></a> | <a target='_blank' rel='noreferrer' href='https://www.willhaben.at/iad/immobilien/d/eigentumswohnung/wien/wien-1110-simmering/provisionsfreie-2-zimmer-wohnung-in-u3-naehe-1268364171/'><b>Ad</b></a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/search/?api=1&amp;query=48.16969,16.426483'>Maps</a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;viewpoint=48.16969,16.426483'>Street View</a></div>
           <div class='summary'>Property
@@ -1635,14 +1639,14 @@ Broader neighbourhood
 - Vienna District 11 is primarily residential with industrial pockets; generally more suburban in feel. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-48' data-rank='48' data-has-terrace='true' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 48'>
+        <div class='card' id='listing-48' data-rank='48' data-has-terrace='true' data-has-parking='false' data-lively='false' data-evening-score='31.6' tabindex='0' role='button' aria-label='Focus map on ranked listing 48'>
           <div class='rank'>#48</div>
           <div class='title'>
             Apartment 2-room 31 m² in a new-build Vienna District 14
             <div style='font-size:11px;color:#666;font-weight:400'>(DE: Die Symbiose - Leben zwischen Stadtgefühl und Rückzug)</div>
           </div>
           <div class='meta'>€207,090 · 30.68 m² · 2 rooms [Bezirk=district; Neubau=newer-build category]  · Meiselstraße 79, Wien, 14. Bezirk, Penzing</div>
-          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span></div>
+          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span><span class='badge badge-quiet'>Quiet evenings (proxy)</span></div>
           
           <div class='links'><a target='_blank' rel='noreferrer' href='https://translate.google.com/translate?sl=auto&amp;tl=en&amp;u=https%3A%2F%2Fwww.willhaben.at%2Fiad%2Fimmobilien%2Fd%2Feigentumswohnung%2Fwien%2Fwien-1140-penzing%2Fdie-symbiose-leben-zwischen-stadtgefuehl-und-rueckzug-1769710596%2F'><b>Ad (EN)</b></a> | <a target='_blank' rel='noreferrer' href='https://www.willhaben.at/iad/immobilien/d/eigentumswohnung/wien/wien-1140-penzing/die-symbiose-leben-zwischen-stadtgefuehl-und-rueckzug-1769710596/'><b>Ad</b></a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/search/?api=1&amp;query=48.19833,16.30739'>Maps</a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;viewpoint=48.19833,16.30739'>Street View</a></div>
           <div class='summary'>Property
@@ -1668,14 +1672,14 @@ Broader neighbourhood
 - Vienna District 14 is a western district with more greenery and a suburban feel; connections depend on the exact area. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-49' data-rank='49' data-has-terrace='true' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 49'>
+        <div class='card' id='listing-49' data-rank='49' data-has-terrace='true' data-has-parking='false' data-lively='false' data-evening-score='31.6' tabindex='0' role='button' aria-label='Focus map on ranked listing 49'>
           <div class='rank'>#49</div>
           <div class='title'>
             Apartment 2-room 41 m² in a new-build Vienna District 14
             <div style='font-size:11px;color:#666;font-weight:400'>(DE: Die Symbiose - Leben zwischen Stadtgefühl und Rückzug)</div>
           </div>
           <div class='meta'>€300,077 · 41.39 m² · 2 rooms [Bezirk=district; Neubau=newer-build category]  · Meiselstraße 79, Wien, 14. Bezirk, Penzing</div>
-          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span></div>
+          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span><span class='badge badge-quiet'>Quiet evenings (proxy)</span></div>
           
           <div class='links'><a target='_blank' rel='noreferrer' href='https://translate.google.com/translate?sl=auto&amp;tl=en&amp;u=https%3A%2F%2Fwww.willhaben.at%2Fiad%2Fimmobilien%2Fd%2Feigentumswohnung%2Fwien%2Fwien-1140-penzing%2Fdie-symbiose-leben-zwischen-stadtgefuehl-und-rueckzug-1998487498%2F'><b>Ad (EN)</b></a> | <a target='_blank' rel='noreferrer' href='https://www.willhaben.at/iad/immobilien/d/eigentumswohnung/wien/wien-1140-penzing/die-symbiose-leben-zwischen-stadtgefuehl-und-rueckzug-1998487498/'><b>Ad</b></a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/search/?api=1&amp;query=48.19833,16.30739'>Maps</a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;viewpoint=48.19833,16.30739'>Street View</a></div>
           <div class='summary'>Property
@@ -1701,14 +1705,14 @@ Broader neighbourhood
 - Vienna District 14 is a western district with more greenery and a suburban feel; connections depend on the exact area. (General background; not source-verified)</div>
         </div>
         
-        <div class='card' id='listing-50' data-rank='50' data-has-terrace='true' data-has-parking='false' tabindex='0' role='button' aria-label='Focus map on ranked listing 50'>
+        <div class='card' id='listing-50' data-rank='50' data-has-terrace='true' data-has-parking='false' data-lively='false' data-evening-score='13.7' tabindex='0' role='button' aria-label='Focus map on ranked listing 50'>
           <div class='rank'>#50</div>
           <div class='title'>
             Apartment 3-room 73 m² Vienna District 14
             <div style='font-size:11px;color:#666;font-weight:400'>(DE: INWEST14)</div>
           </div>
           <div class='meta'>€499,900 · 72.94 m² · 3 rooms [Bezirk=district]  · Linzer Strasse 161 123, Wien, 14. Bezirk, Penzing</div>
-          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span></div>
+          <div class='badges'><span class='badge badge-terrace'>Terrace/Outdoor</span><span class='badge badge-quiet'>Quiet evenings (proxy)</span></div>
           <div class='warn'>Address/map mismatch flagged (likely approximate pin).</div>
           <div class='links'><a target='_blank' rel='noreferrer' href='https://translate.google.com/translate?sl=auto&amp;tl=en&amp;u=https%3A%2F%2Fwww.willhaben.at%2Fiad%2Fimmobilien%2Fd%2Feigentumswohnung%2Fwien%2Fwien-1140-penzing%2Finwest14-522907825%2F'><b>Ad (EN)</b></a> | <a target='_blank' rel='noreferrer' href='https://www.willhaben.at/iad/immobilien/d/eigentumswohnung/wien/wien-1140-penzing/inwest14-522907825/'><b>Ad</b></a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/search/?api=1&amp;query=48.194,16.2976'>Maps</a> · <a target='_blank' rel='noreferrer' href='https://www.google.com/maps/@?api=1&amp;map_action=pano&amp;viewpoint=48.194,16.2976'>Street View</a></div>
           <div class='summary'>Property
@@ -1837,6 +1841,7 @@ Broader neighbourhood
     // Filters
     const filterParking = document.getElementById('filterParking');
     const filterTerrace = document.getElementById('filterTerrace');
+    const filterLively = document.getElementById('filterLively');
 
     function setHeaderVisible(visible) {
       if (visible) {
@@ -1876,14 +1881,16 @@ Broader neighbourhood
     function applyFilters() {
       const wantParking = !!(filterParking && filterParking.checked);
       const wantTerrace = !!(filterTerrace && filterTerrace.checked);
+      const wantLively = !!(filterLively && filterLively.checked);
 
       // Show/hide cards and corresponding markers
       document.querySelectorAll('.card[data-rank]').forEach(el => {
         const rank = el.getAttribute('data-rank');
         const hasP = el.getAttribute('data-has-parking') === 'true';
         const hasT = el.getAttribute('data-has-terrace') === 'true';
+        const lively = el.getAttribute('data-lively') === 'true';
 
-        const ok = (!wantParking || hasP) && (!wantTerrace || hasT);
+        const ok = (!wantParking || hasP) && (!wantTerrace || hasT) && (!wantLively || lively);
         el.style.display = ok ? '' : 'none';
 
         const m = markersByRank.get(String(rank));
@@ -1896,6 +1903,7 @@ Broader neighbourhood
 
     if (filterParking) filterParking.addEventListener('change', applyFilters);
     if (filterTerrace) filterTerrace.addEventListener('change', applyFilters);
+    if (filterLively) filterLively.addEventListener('change', applyFilters);
 
     // Drag-to-resize splitter
     let dragging = false;
