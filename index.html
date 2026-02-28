@@ -32,6 +32,9 @@
     }
     .leftHeader { position: sticky; top: 0; background: #fff; border-bottom: 1px solid #eee; padding: 10px 14px; z-index: 10; }
     .leftHeaderTop { display:flex; align-items:center; justify-content: space-between; gap: 10px; }
+    .leftHeader.hidden { display:none; }
+    .miniHeader { position: sticky; top: 0; background:#fff; border-bottom:1px solid #eee; padding: 8px 14px; z-index: 11; display:none; }
+    .miniHeader.show { display:flex; align-items:center; justify-content:space-between; gap:10px; }
     .toggleBtn { border:1px solid #ddd; background:#fff; border-radius: 8px; padding: 6px 10px; font-size: 12px; cursor:pointer; }
     .toggleBtn:hover { border-color:#cbd5e1; }
 
@@ -54,13 +57,13 @@
   <div class='wrap'>
     <div class='left' id='leftPane'>
       <div class='leftInner'>
-        <div class='leftHeader'>
+        <div class='leftHeader' id='leftHeader'>
           <div class='leftHeaderTop'>
             <div>
               <div style='font-weight:700'>Vienna apartment report</div>
               <div style='color:#444; font-size:12px; margin-top:2px'>Listings (left) + Leaflet map (right). Click a listing to zoom/highlight the marker; click a marker to jump to the listing.</div>
             </div>
-            <button class='toggleBtn' id='hideLeftBtn' title='Hide the whole left panel'>Hide</button>
+            <button class='toggleBtn' id='hideHeaderBtn' title='Hide header'>Hide header</button>
           </div>
           <div style='margin-top:8px; font-size:12px; color:#333'>
             <b>What you’re seeing:</b> apartments for purchase (Willhaben), max price €700k, Vienna districts ranked by centrality + very-local walkability proxies. “Late-evening busyness” is a <b>proxy</b> from nearby food/drink venues.
@@ -70,6 +73,14 @@
             Bezirk = district; Altbau = pre-war / classic older building category; Neubau = newer-build category; 
             U-Bahn = metro; S-Bahn = suburban rail; Straßenbahn = tram; Schanigarten = sidewalk seating; 
             Erstbezug = first occupancy; Ruhelage = quiet location; Lift = elevator.
+          </div>
+        </div>
+
+        <div class='miniHeader' id='miniHeader'>
+          <div style='font-weight:600; font-size:12px'>Report</div>
+          <div style='display:flex; gap:8px'>
+            <button class='toggleBtn' id='showHeaderBtn' title='Show header'>Show header</button>
+            <button class='toggleBtn' id='closePaneBtn' title='Collapse list panel'>Close</button>
           </div>
         </div>
 
@@ -610,15 +621,29 @@
     // Hide/show + resize left pane
     const leftPane = document.getElementById('leftPane');
     const splitter = document.getElementById('splitter');
-    const hideBtn = document.getElementById('hideLeftBtn');
     const showWrap = document.getElementById('showLeftWrap');
     const showBtn = document.getElementById('showLeftBtn');
+
+    const header = document.getElementById('leftHeader');
+    const miniHeader = document.getElementById('miniHeader');
+    const hideHeaderBtn = document.getElementById('hideHeaderBtn');
+    const showHeaderBtn = document.getElementById('showHeaderBtn');
+    const closePaneBtn = document.getElementById('closePaneBtn');
+
+    function setHeaderVisible(visible) {
+      if (visible) {
+        header.classList.remove('hidden');
+        miniHeader.classList.remove('show');
+      } else {
+        header.classList.add('hidden');
+        miniHeader.classList.add('show');
+      }
+    }
 
     function setLeftVisible(visible) {
       if (visible) {
         leftPane.classList.remove('collapsed');
         showWrap.style.display = 'none';
-        // restore width (desktop) / rely on CSS height on mobile
         const w = parseInt(localStorage.getItem('leftPaneWidth') || '520', 10);
         leftPane.style.width = Math.max(320, Math.min(w, Math.floor(window.innerWidth * 0.7))) + 'px';
         setTimeout(() => map.invalidateSize(), 80);
@@ -629,7 +654,9 @@
       }
     }
 
-    hideBtn.addEventListener('click', () => setLeftVisible(false));
+    hideHeaderBtn.addEventListener('click', () => setHeaderVisible(false));
+    showHeaderBtn.addEventListener('click', () => setHeaderVisible(true));
+    closePaneBtn.addEventListener('click', () => setLeftVisible(false));
     showBtn.addEventListener('click', () => setLeftVisible(true));
 
     // Init width from storage
