@@ -653,11 +653,12 @@
       leftPane.scrollTo({behavior: 'smooth', top: top});
     }
 
-    function focusListing(rank, zoom=16) {
+    function focusListing(rank) {
       const m = markersByRank.get(String(rank));
       if (!m) return;
       const ll = m.getLatLng();
-      map.setView(ll, zoom, {animate:true});
+      // Center the map without changing zoom
+      map.panTo(ll, {animate:true});
       m.openPopup();
       if (highlight) { try { map.removeLayer(highlight); } catch(e) {} }
       highlight = L.circleMarker(ll, {radius: 14, color:'#2563eb', weight: 3, fillColor:'#60a5fa', fillOpacity: 0.15}).addTo(map);
