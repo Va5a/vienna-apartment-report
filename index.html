@@ -676,7 +676,7 @@
       m.on('click', () => {
         selectCard(p.rank);
         scrollToCard(p.rank);
-        if (map.getZoom() < 15) map.setView(ll, 16, {animate:true});
+        // keep zoom unchanged on marker click
         if (highlight) { try { map.removeLayer(highlight); } catch(e) {} }
         highlight = L.circleMarker(ll, {radius: 14, color:'#2563eb', weight: 3, fillColor:'#60a5fa', fillOpacity: 0.15}).addTo(map);
       });
