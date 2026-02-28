@@ -8,18 +8,25 @@
   <script src='https://unpkg.com/leaflet@1.9.4/dist/leaflet.js' integrity='sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=' crossorigin=''></script>
   <style>
     body { margin:0; font-family: -apple-system, system-ui, Segoe UI, Roboto, Helvetica, Arial; }
-    .wrap { display:flex; height:100vh; }
-    .left { width: 46%; overflow:auto; padding: 0; box-sizing: border-box; border-right: 1px solid #eee; transition: width 160ms ease; }
+    .wrap { display:flex; height:100vh; width:100vw; overflow:hidden; }
+    .left { width: 520px; max-width: 70vw; min-width: 320px; overflow:auto; padding: 0; box-sizing: border-box; border-right: 1px solid #eee; transition: width 160ms ease; background:#fff; }
     .leftInner { padding: 14px; }
-    .left.collapsed { width: 0; border-right: none; }
+    .left.collapsed { width: 0 !important; min-width: 0 !important; border-right: none; }
     .left.collapsed .leftInner { display:none; }
+
+    #splitter { width: 8px; cursor: col-resize; background: linear-gradient(to right, rgba(0,0,0,0.03), rgba(0,0,0,0.00)); }
+    #splitter:hover { background: linear-gradient(to right, rgba(37,99,235,0.12), rgba(0,0,0,0.00)); }
+    .left.collapsed + #splitter { display:none; }
+
     .right { flex:1; position: relative; }
     .leftHeader { position: sticky; top: 0; background: #fff; border-bottom: 1px solid #eee; padding: 10px 14px; z-index: 10; }
     .leftHeaderTop { display:flex; align-items:center; justify-content: space-between; gap: 10px; }
     .toggleBtn { border:1px solid #ddd; background:#fff; border-radius: 8px; padding: 6px 10px; font-size: 12px; cursor:pointer; }
     .toggleBtn:hover { border-color:#cbd5e1; }
-    .floatingToggle { position:absolute; top: 10px; left: 10px; z-index: 999; display:none; }
-    .floatingToggle button { border:1px solid #ddd; background:#fff; border-radius: 10px; padding: 8px 10px; font-size: 12px; cursor:pointer; box-shadow: 0 1px 10px rgba(0,0,0,0.12); }
+
+    .floatingHandle { position:absolute; top: 14px; left: 0; z-index: 999; display:none; }
+    .floatingHandle button { border:1px solid #ddd; background:#fff; border-left:none; border-radius: 0 10px 10px 0; padding: 10px 10px; font-size: 12px; cursor:pointer; box-shadow: 0 1px 10px rgba(0,0,0,0.18); }
+
     #map { height:100%; width:100%; }
     .card { border:1px solid #eee; border-radius:10px; padding:10px 12px; margin:10px 0; cursor:pointer; }
     .card:hover { border-color:#cbd5e1; box-shadow: 0 1px 8px rgba(0,0,0,0.06); }
@@ -40,9 +47,12 @@
           <div class='leftHeaderTop'>
             <div>
               <div style='font-weight:700'>Vienna apartment report</div>
-              <div style='color:#444; font-size:12px; margin-top:2px'>Click a listing to focus it on the map. Click a marker to jump to its listing.</div>
+              <div style='color:#444; font-size:12px; margin-top:2px'>Listings (left) + Leaflet map (right). Click a listing to zoom/highlight the marker; click a marker to jump to the listing.</div>
             </div>
-            <button class='toggleBtn' id='hideLeftBtn' title='Hide list'>Hide</button>
+            <button class='toggleBtn' id='hideLeftBtn' title='Hide the whole left panel'>Hide</button>
+          </div>
+          <div style='margin-top:8px; font-size:12px; color:#333'>
+            <b>What you’re seeing:</b> apartments for purchase (Willhaben), max price €700k, Vienna districts ranked by centrality + very-local walkability proxies. “Late-evening busyness” is a <b>proxy</b> from nearby food/drink venues.
           </div>
           <div style='margin-top:8px; font-size:12px; color:#333'>
             <b>Glossary:</b>
@@ -517,8 +527,9 @@
         </div>
       </div>
     </div>
+    <div id='splitter' title='Drag to resize list'></div>
     <div class='right'>
-      <div class='floatingToggle' id='showLeftWrap'><button id='showLeftBtn' title='Show list'>Show list</button></div>
+      <div class='floatingHandle' id='showLeftWrap'><button id='showLeftBtn' title='Show list'>▶</button></div>
       <div id='map'></div>
     </div>
   </div>
@@ -585,8 +596,9 @@
       });
     });
 
-    // Hide/show left pane
+    // Hide/show + resize left pane
     const leftPane = document.getElementById('leftPane');
+    const splitter = document.getElementById('splitter');
     const hideBtn = document.getElementById('hideLeftBtn');
     const showWrap = document.getElementById('showLeftWrap');
     const showBtn = document.getElementById('showLeftBtn');
@@ -595,16 +607,57 @@
       if (visible) {
         leftPane.classList.remove('collapsed');
         showWrap.style.display = 'none';
-        // Leaflet needs a resize signal after layout change
-        setTimeout(() => map.invalidateSize(), 50);
+        // restore width
+        const w = parseInt(localStorage.getItem('leftPaneWidth') || '520', 10);
+        leftPane.style.width = Math.max(320, Math.min(w, Math.floor(window.innerWidth * 0.7))) + 'px';
+        setTimeout(() => map.invalidateSize(), 60);
       } else {
         leftPane.classList.add('collapsed');
         showWrap.style.display = 'block';
-        setTimeout(() => map.invalidateSize(), 50);
+        setTimeout(() => map.invalidateSize(), 60);
       }
     }
+
     hideBtn.addEventListener('click', () => setLeftVisible(false));
     showBtn.addEventListener('click', () => setLeftVisible(true));
+
+    // Init width from storage
+    try {
+      const w = parseInt(localStorage.getItem('leftPaneWidth') || '520', 10);
+      leftPane.style.width = Math.max(320, Math.min(w, Math.floor(window.innerWidth * 0.7))) + 'px';
+    } catch(e) {}
+
+    // Drag-to-resize splitter
+    let dragging = false;
+    let startX = 0;
+    let startW = 0;
+
+    splitter.addEventListener('mousedown', (e) => {
+      dragging = true;
+      startX = e.clientX;
+      startW = leftPane.getBoundingClientRect().width;
+      document.body.style.cursor = 'col-resize';
+      document.body.style.userSelect = 'none';
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!dragging) return;
+      const dx = e.clientX - startX;
+      let w = startW + dx;
+      const minW = 320;
+      const maxW = Math.floor(window.innerWidth * 0.7);
+      w = Math.max(minW, Math.min(maxW, w));
+      leftPane.style.width = w + 'px';
+      try { localStorage.setItem('leftPaneWidth', String(Math.round(w))); } catch(e) {}
+      map.invalidateSize();
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (!dragging) return;
+      dragging = false;
+      document.body.style.cursor = '';
+      document.body.style.userSelect = '';
+    });
 
     if (points.length) map.fitBounds(bounds.pad(0.15));
     else map.setView([48.2082, 16.3738], 12);
