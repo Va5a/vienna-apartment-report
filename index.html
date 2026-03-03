@@ -1013,6 +1013,90 @@
       touristic: { url: 'overlay_touristic.geojson', label: 'Touristic', defaultOn: true },
     };
     const overlayLayers = { quiet_lively: null, noisy_lively: null, touristic: null };
+    const overlayIndex = { quiet_lively: null, noisy_lively: null, touristic: null };
+
+    // Grid scoring (matches build_lively_overlays.py): 100m WebMercator grid, 70m decay-to-zero.
+    const GRID_M = 100.0;
+    const DECAY_M = 70.0;
+    const THRESH_LIVELY = 0.4; // Vasa: max(quiet,noisy) >= 0.4
+    const R = 6378137.0;
+
+    function lonlatToWebm(lon, lat){
+      // clamp like python
+      lat = Math.max(Math.min(lat, 85.05112878), -85.05112878);
+      const x = R * (lon * Math.PI/180.0);
+      const y = R * Math.log(Math.tan(Math.PI/4.0 + (lat * Math.PI/180.0)/2.0));
+      return [x,y];
+    }
+
+    function gridKey(gx, gy){ return String(gx) + ',' + String(gy); }
+
+    function buildIndexFromGeoJSON(gj){
+      const m = new Map();
+      try {
+        (gj.features || []).forEach(f => {
+          const p = f && f.properties ? f.properties : null;
+          if(!p) return;
+          const gx = p.grid_x; const gy = p.grid_y;
+          if(gx === undefined || gy === undefined) return;
+          const t = (p.intensity !== undefined) ? Number(p.intensity) : 0;
+          m.set(gridKey(gx, gy), isFinite(t) ? t : 0);
+        });
+      } catch(e) {}
+      return m;
+    }
+
+    function scoreAt(kind, lon, lat, approx){
+      const idx = overlayIndex[kind];
+      if(!idx) return 0.0;
+      if(lon === null || lat === null || lon === undefined || lat === undefined) return 0.0;
+      const [x,y] = lonlatToWebm(Number(lon), Number(lat));
+      const gx = Math.floor(x / GRID_M);
+      const gy = Math.floor(y / GRID_M);
+      const radiusCells = approx ? 2 : 1; // nearby-cell averaging for approximate pins
+      let num = 0.0;
+      let den = 0.0;
+      for(let dx=-radiusCells; dx<=radiusCells; dx++){
+        for(let dy=-radiusCells; dy<=radiusCells; dy++){
+          const k = gridKey(gx+dx, gy+dy);
+          if(!idx.has(k)) continue;
+          const t = idx.get(k) || 0.0;
+          // distance to cell center in WebMercator meters
+          const cx = (gx + dx + 0.5) * GRID_M;
+          const cy = (gy + dy + 0.5) * GRID_M;
+          const dd = Math.hypot(x - cx, y - cy);
+          if(dd >= DECAY_M) continue;
+          const w = (1.0 - (dd / DECAY_M));
+          num += w * t;
+          den += w;
+        }
+      }
+      return den > 0 ? (num / den) : 0.0;
+    }
+
+    function computeOverlayLively(rank){
+      const p = points.find(pp => String(pp.rank) === String(rank));
+      if(!p) return {lively:null, quiet:0, noisy:0};
+      const approx = (p.pin === 'mismatch');
+      const quiet = scoreAt('quiet_lively', p.lng, p.lat, approx);
+      const noisy = scoreAt('noisy_lively', p.lng, p.lat, approx);
+      const lively = Math.max(quiet, noisy) >= THRESH_LIVELY;
+      return {lively, quiet, noisy};
+    }
+
+    function maybeUpdateLivelyFromOverlays(){
+      if(!overlayIndex.quiet_lively || !overlayIndex.noisy_lively) return;
+      // Update card attributes so the existing filter works, and keep proxy as fallback when overlays missing.
+      document.querySelectorAll('.card[data-rank]').forEach(el => {
+        const rank = el.getAttribute('data-rank');
+        const s = computeOverlayLively(rank);
+        if(s.lively === null) return;
+        el.setAttribute('data-lively', s.lively ? 'true' : 'false');
+        el.setAttribute('data-quiet-score', String(s.quiet.toFixed(3)));
+        el.setAttribute('data-noisy-score', String(s.noisy.toFixed(3)));
+      });
+      try { applyFilters(); } catch(e) {}
+    }
 
     function setOverlay(kind, on){
       const layer = overlayLayers[kind];
@@ -1042,6 +1126,8 @@
           setOverlayStatus(kind, 'invalid');
           return;
         }
+        // Index for scoring/filtering
+        overlayIndex[kind] = buildIndexFromGeoJSON(gj);
         const layer = L.geoJSON(gj, {
           renderer: overlayRenderer,
           style: (feature) => {
@@ -1052,6 +1138,8 @@
         });
         overlayLayers[kind] = layer;
         setOverlayStatus(kind, gj.features.length.toLocaleString() + ' cells');
+        // If quiet/noisy overlays are loaded, update the "lively" filter to be overlay-driven.
+        maybeUpdateLivelyFromOverlays();
         // apply current checkbox state (or default)
         const cb = document.getElementById(kind === 'quiet_lively' ? 'ov_quiet' : kind === 'noisy_lively' ? 'ov_noisy' : 'ov_tour');
         const wantOn = cb ? cb.checked : !!spec.defaultOn;
