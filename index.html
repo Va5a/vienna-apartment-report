@@ -97,13 +97,13 @@
             </div>
             <div style='margin-top:6px; display:flex; gap:12px; flex-wrap:wrap; align-items:center'>
               <label style='display:flex; align-items:center; gap:6px; cursor:pointer'>
-                <input type='checkbox' id='ov_quiet' checked/> <span>Quiet lively (restaurants+cafes)</span>
+                <input type='checkbox' id='ov_quiet' checked/> <span>Quiet lively (restaurants+cafes)</span> <span id='ov_status_quiet' style='color:#666'></span>
               </label>
               <label style='display:flex; align-items:center; gap:6px; cursor:pointer'>
-                <input type='checkbox' id='ov_noisy' checked/> <span>Noisy lively (bars+pubs+clubs)</span>
+                <input type='checkbox' id='ov_noisy' checked/> <span>Noisy lively (bars+pubs+clubs)</span> <span id='ov_status_noisy' style='color:#666'></span>
               </label>
               <label style='display:flex; align-items:center; gap:6px; cursor:pointer'>
-                <input type='checkbox' id='ov_tour' checked/> <span>Touristic (attractions+hotels)</span>
+                <input type='checkbox' id='ov_tour' checked/> <span>Touristic (attractions+hotels)</span> <span id='ov_status_tour' style='color:#666'></span>
               </label>
             </div>
           </div>
@@ -1019,14 +1019,28 @@
       try { if(on) layer.addTo(map); else map.removeLayer(layer); } catch(e) {}
     }
 
-    async function loadOverlay(kind){
+    function setOverlayStatus(kind, text){
+      const el = document.getElementById(kind === 'quiet_lively' ? 'ov_status_quiet' : kind === 'noisy_lively' ? 'ov_status_noisy' : 'ov_status_tour');
+      if(el) el.textContent = text || '';
+    }
+
+    async function loadOverlay(kind, attempt){
+      attempt = attempt || 1;
       const spec = overlaySpecs[kind];
       if(!spec) return;
       try {
-        const resp = await fetch(spec.url, {cache: 'force-cache'});
-        if(!resp.ok) return;
+        setOverlayStatus(kind, attempt === 1 ? 'loading…' : ('retry ' + attempt + '…'));
+        const resp = await fetch(spec.url, {cache: 'no-store'});
+        if(!resp.ok) {
+          setOverlayStatus(kind, 'not available (' + resp.status + ')');
+          if(attempt < 6) setTimeout(() => loadOverlay(kind, attempt + 1), 2000 * attempt);
+          return;
+        }
         const gj = await resp.json();
-        if(!gj || !gj.features) return;
+        if(!gj || !gj.features) {
+          setOverlayStatus(kind, 'invalid');
+          return;
+        }
         const layer = L.geoJSON(gj, {
           style: (feature) => {
             const t = (feature && feature.properties) ? feature.properties.intensity : 0;
@@ -1035,17 +1049,20 @@
           interactive: false,
         });
         overlayLayers[kind] = layer;
+        setOverlayStatus(kind, gj.features.length.toLocaleString() + ' cells');
         // apply current checkbox state (or default)
         const cb = document.getElementById(kind === 'quiet_lively' ? 'ov_quiet' : kind === 'noisy_lively' ? 'ov_noisy' : 'ov_tour');
         const wantOn = cb ? cb.checked : !!spec.defaultOn;
         if(wantOn) layer.addTo(map);
-      } catch(e) {}
+      } catch(e) {
+        setOverlayStatus(kind, 'error');
+      }
     }
 
     // kick off loads
-    loadOverlay('quiet_lively');
-    loadOverlay('noisy_lively');
-    loadOverlay('touristic');
+    loadOverlay('quiet_lively', 1);
+    loadOverlay('noisy_lively', 1);
+    loadOverlay('touristic', 1);
 
     function selectCard(rank) {
       document.querySelectorAll('.card.selected').forEach(el => el.classList.remove('selected'));
