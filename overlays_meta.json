@@ -1,0 +1,63 @@
+{
+  "generated_at": "2026-03-03T20:33:47+0100",
+  "cell_m": 100.0,
+  "overpass_endpoint": "https://overpass-api.de/api/interpreter",
+  "layers": {
+    "quiet_lively": {
+      "description": "Quiet lively: restaurants + cafes (amenity=restaurant|cafe).",
+      "selectors": [
+        {
+          "amenity": "restaurant"
+        },
+        {
+          "amenity": "cafe"
+        }
+      ],
+      "pois": 4161,
+      "cells": 3112,
+      "out": "out/overlay_quiet_lively.geojson"
+    },
+    "noisy_lively": {
+      "description": "Noisy lively: bars + pubs + nightclubs (amenity=bar|pub|nightclub).",
+      "selectors": [
+        {
+          "amenity": "bar"
+        },
+        {
+          "amenity": "pub"
+        },
+        {
+          "amenity": "nightclub"
+        }
+      ],
+      "pois": 760,
+      "cells": 654,
+      "out": "out/overlay_noisy_lively.geojson"
+    },
+    "touristic": {
+      "description": "Touristic: attractions + museums + hotels/hostels (tourism=attraction|museum|hotel|hostel). Informational only.",
+      "selectors": [
+        {
+          "tourism": "attraction"
+        },
+        {
+          "tourism": "museum"
+        },
+        {
+          "tourism": "hotel"
+        },
+        {
+          "tourism": "hostel"
+        }
+      ],
+      "pois": 798,
+      "cells": 714,
+      "out": "out/overlay_touristic.geojson"
+    }
+  },
+  "notes": [
+    "These overlays are built from OpenStreetMap POI tags via Overpass.",
+    "Intensity is log-scaled per layer (0..1) based on max cell count.",
+    "Intended rebuild cadence: quarterly."
+  ]
+}
