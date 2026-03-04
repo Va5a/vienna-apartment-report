@@ -2683,12 +2683,18 @@
     map.getPane('districtPane').style.zIndex = 250;
     map.getPane('districtPane').style.pointerEvents = 'none';
 
+    map.createPane('districtLabelPane');
+    map.getPane('districtLabelPane').style.zIndex = 420;
+
     map.createPane('gridPane');
     map.getPane('gridPane').style.zIndex = 300;
     map.getPane('gridPane').style.pointerEvents = 'none';
 
     map.createPane('pinPane');
     map.getPane('pinPane').style.zIndex = 650;
+
+    map.createPane('pinTooltipPane');
+    map.getPane('pinTooltipPane').style.zIndex = 720;
 
     const overlayRenderer = L.canvas({ padding: 0.5, pane: 'gridPane' });
     L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '&copy; OpenStreetMap contributors' }).addTo(map);
@@ -2890,28 +2896,50 @@
         const resp = await fetch('vienna_districts.geojson', {cache:'force-cache'});
         if(!resp.ok) return;
         const gj = await resp.json();
+        const baseStyle = { color: 'rgba(17,24,39,0.45)', weight: 1, fillOpacity: 0, opacity: 0.75 };
+        const hiStyle = { color: 'rgba(17,24,39,0.95)', weight: 3, fillOpacity: 0, opacity: 1.0 };
+        const districtLayerById = {};
+
         const layer = L.geoJSON(gj, {
           pane: 'districtPane',
-          style: () => ({ color: 'rgba(17,24,39,0.45)', weight: 1, fillOpacity: 0, opacity: 0.8 }),
+          style: () => baseStyle,
           interactive: false,
+          onEachFeature: (feat, lyr) => {
+            const d = feat && feat.properties ? feat.properties.district : null;
+            if(d != null) districtLayerById[String(d)] = lyr;
+          }
         }).addTo(map);
 
-        // Labels: district number at centroid (from our references file, so fast + stable)
+        function highlightDistrict(d){
+          const lyr = districtLayerById[String(d)];
+          if(!lyr) return;
+          try { lyr.setStyle(hiStyle); } catch(e) {}
+        }
+        function unhighlightDistrict(d){
+          const lyr = districtLayerById[String(d)];
+          if(!lyr) return;
+          try { lyr.setStyle(baseStyle); } catch(e) {}
+        }
+
+        // Labels: district number at centroid. Hovering a label increases border visibility.
         (districtLabels || []).forEach(d => {
           if(!d || d.lat == null || d.lng == null) return;
           const div = document.createElement('div');
           div.textContent = String(d.district);
           div.style.fontSize = '11px';
           div.style.fontWeight = '700';
-          div.style.color = 'rgba(17,24,39,0.65)';
-          div.style.background = 'rgba(255,255,255,0.65)';
-          div.style.border = '1px solid rgba(17,24,39,0.20)';
+          div.style.color = 'rgba(17,24,39,0.70)';
+          div.style.background = 'rgba(255,255,255,0.70)';
+          div.style.border = '1px solid rgba(17,24,39,0.22)';
           div.style.borderRadius = '6px';
           div.style.padding = '1px 5px';
           div.style.lineHeight = '1.1';
-          div.style.pointerEvents = 'none';
+          div.style.boxShadow = '0 1px 2px rgba(0,0,0,0.10)';
           const icon = L.divIcon({ html: div, className: '', iconSize: null });
-          L.marker([d.lat, d.lng], { icon, pane: 'districtPane', interactive: false }).addTo(map);
+          const m = L.marker([d.lat, d.lng], { icon, pane: 'districtLabelPane', interactive: true, keyboard: false });
+          m.on('mouseover', () => highlightDistrict(d.district));
+          m.on('mouseout', () => unhighlightDistrict(d.district));
+          m.addTo(map);
         });
       } catch(e) {}
     }
@@ -2977,7 +3005,7 @@
 
       const m = L.circleMarker(ll, {radius: 8, weight: 2, ...sty, pane: 'pinPane'}).addTo(map);
       markersByRank.set(String(p.rank), m);
-      if (p.tooltip) m.bindTooltip(p.tooltip, {direction:'top', opacity:0.97, sticky:true});
+      if (p.tooltip) m.bindTooltip(p.tooltip, {direction:'top', opacity:0.97, sticky:true, pane:'pinTooltipPane'});
       if (p.popup) m.bindPopup(p.popup, {maxWidth: 420});
       m.on('click', () => {
         selectCard(p.rank);
