@@ -3124,6 +3124,8 @@
       m.on('tooltipclose', ()=>_pinHover(false));
 
       m.on('click', () => {
+        // Ensure repeated clicks re-open the popup even if it was manually closed.
+        try { m.openPopup(); } catch(e) {}
         selectCard(p.rank);
         scrollToCard(p.rank);
         map.panTo(ll, {animate:true});
