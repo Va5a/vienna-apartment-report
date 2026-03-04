@@ -2703,6 +2703,7 @@
     const overlays = null; // overlays loaded via fetch (separate files)
     const bounds = L.latLngBounds();
     const markersByRank = new Map();
+    const pointsByRank = new Map();
     let highlight = null;
 
     function getCard(rank) {
@@ -3070,11 +3071,24 @@
       m.openPopup();
       if (highlight) { try { map.removeLayer(highlight); } catch(e) {} }
       highlight = L.circleMarker(ll, {radius: 14, color:'#2563eb', weight: 3, fillColor:'#60a5fa', fillOpacity: 0.15, pane: 'pinPane'}).addTo(map);
+
+      // Selecting a listing should also highlight its district (and adjacent districts if near boundary)
+      try {
+        const p = pointsByRank.get(String(rank));
+        const dh = window.__districtHighlight;
+        if (p && dh && p.district != null) {
+          const near = dh.adjacentDistrictsNear ? dh.adjacentDistrictsNear(ll, p.district) : [];
+          const ds = [parseInt(p.district,10)].concat(near || []);
+          dh.setHighlightedDistricts(ds);
+        }
+      } catch(e) {}
+
       selectCard(rank);
       scrollToCard(rank);
     }
 
     points.forEach((p) => {
+      pointsByRank.set(String(p.rank), p);
       const ll = L.latLng(p.lat, p.lng);
       bounds.extend(ll);
 
