@@ -2017,7 +2017,9 @@
     // Grid scoring (matches build_lively_overlays.py): 100m WebMercator grid, 70m decay-to-zero.
     const GRID_M = 100.0;
     const DECAY_M = 70.0;
-    const THRESH_LIVELY = 0.4; // Vasa: max(quiet,noisy) >= 0.4
+    // Lively definition (Vasa): clusters, not single POIs.
+    // We still compute decayed intensity, but we only consider cells above a minimum raw count.
+    const MIN_COUNT_LIVELY = { quiet_lively: 3, noisy_lively: 2 };
     const R = 6378137.0;
 
     function lonlatToWebm(lon, lat){
@@ -2039,7 +2041,8 @@
           const gx = p.grid_x; const gy = p.grid_y;
           if(gx === undefined || gy === undefined) return;
           const t = (p.intensity !== undefined) ? Number(p.intensity) : 0;
-          m.set(gridKey(gx, gy), isFinite(t) ? t : 0);
+          const c = (p.count !== undefined) ? Number(p.count) : 0;
+          m.set(gridKey(gx, gy), { intensity: (isFinite(t) ? t : 0), count: (isFinite(c) ? c : 0) });
         });
       } catch(e) {}
       return m;
@@ -2059,7 +2062,11 @@
         for(let dy=-radiusCells; dy<=radiusCells; dy++){
           const k = gridKey(gx+dx, gy+dy);
           if(!idx.has(k)) continue;
-          const t = idx.get(k) || 0.0;
+          const cell = idx.get(k);
+          const t = cell ? (cell.intensity || 0.0) : 0.0;
+          const c = cell ? (cell.count || 0.0) : 0.0;
+          const minC = (MIN_COUNT_LIVELY[kind] || 0);
+          if(minC && c < minC) continue;
           // distance to cell center in WebMercator meters
           const cx = (gx + dx + 0.5) * GRID_M;
           const cy = (gy + dy + 0.5) * GRID_M;
@@ -2079,7 +2086,7 @@
       const approx = (p.pin === 'mismatch');
       const quiet = scoreAt('quiet_lively', p.lng, p.lat, approx);
       const noisy = scoreAt('noisy_lively', p.lng, p.lat, approx);
-      const lively = Math.max(quiet, noisy) >= THRESH_LIVELY;
+      const lively = (quiet > 0) || (noisy > 0);
       return {lively, quiet, noisy};
     }
 
@@ -2127,9 +2134,14 @@
         }
         // Index for scoring/filtering
         overlayIndex[kind] = buildIndexFromGeoJSON(gj);
+        const minDisplay = (kind === 'quiet_lively') ? 3 : (kind === 'noisy_lively') ? 2 : 2;
         const layer = L.geoJSON(gj, {
           pane: 'gridPane',
           renderer: overlayRenderer,
+          filter: (feature) => {
+            const c = (feature && feature.properties) ? Number(feature.properties.count || 0) : 0;
+            return c >= minDisplay;
+          },
           style: (feature) => {
             const t = (feature && feature.properties) ? feature.properties.intensity : 0;
             return { color: 'rgba(0,0,0,0)', weight: 0, fillColor: colorFor(kind, t), fillOpacity: 1.0 };
